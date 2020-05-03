@@ -1,8 +1,8 @@
 import 'react-native-gesture-handler';
-import React from 'react';
-import { StyleSheet, Text, View, Button, TouchableOpacity, TextInput, Image } from 'react-native';
-import { NavigationContainer, RouteProp } from '@react-navigation/native';
-import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, Button, TouchableOpacity, TextInput, Image, Switch } from 'react-native';
+import { RouteProp } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 
 type RootStackParamList = {
   Home: undefined;
@@ -54,8 +54,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 10,
     paddingRight: 10,
-    height: "auto",
-    // backgroundColor:'#ccc'
+    height: "auto"
   },
   line: {
     marginTop: 15,
@@ -82,6 +81,10 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
+  autoLoginLabel: {
+    color: '#ccc',
+    marginRight: 5
+  },
   button: {
     width: 20,
     height: 20,
@@ -103,36 +106,44 @@ const styles = StyleSheet.create({
 });
 
 export function LoginScreen({ route, navigation }: Props) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [autoLogin, setAutoLogin] = useState(true);
+
+  const func = (value: boolean) => setAutoLogin(value);
+  const closeWindow = () => {navigation.navigate('Home')};
   return (
     <View style={styles.background}>
       <Image
         style={styles.imageBg}
-        source={require('../../resources/purple-bg.jpg')}
+        source={require('../../resources/food.jpg')}
       />
       <View style={styles.mainContainer}>
         <View style={styles.nav}>
           <View style={styles.button} />
           <Text style={styles.titleText}>Sign In</Text>
-          {/* <TouchableOpacity onPress={this.closeWindow}>
+          <TouchableOpacity onPress={closeWindow}>
           <Image
             style={styles.button}
             source={require('../../resources/close.png')}
           /> 
-        </TouchableOpacity> */}
+        </TouchableOpacity>
         </View>
         <View style={styles.line}></View>
         <View style={styles.smallContainer}>
-          <TextInput underlineColorAndroid="#b131d8" placeholder="Please input your user name" />
-          <TextInput underlineColorAndroid="#b131d8" placeholder="Please input your password" />
+          <Text>Username</Text>
+          <TextInput underlineColorAndroid="#009688" placeholder="Please input your user name" onChangeText={username => setUsername(username)}/>
+          <Text>Password</Text>
+          <TextInput underlineColorAndroid="#009688" placeholder="Please input your password" onChangeText={password => setPassword(password)} />
           <View style={styles.rememberBox}>
-            <Text style={{ color: "#ccc" }}>Auto Login</Text>
-            {/* <Switch
-            onValueChange={(value) => this.setState({ autoLogin: value })}
+            <Text style={styles.autoLoginLabel}>Auto Login</Text>
+            <Switch
+            onValueChange={func}
             style={{ marginBottom: 10, marginTop: 10 }}
-            value={this.state.autoLogin} /> */}
+            value={autoLogin} />
           </View>
           <View style={styles.gap}></View>
-          <Button color='#b131d8' onPress={() => navigation.navigate('Home')} title="Sign In" />
+          <Button color='#009688' onPress={() => navigation.navigate('Home')} title="Sign In" />
           <TouchableOpacity style={styles.signUp}>
             <Text>Don't have an account?Sign Up Here!</Text>
           </TouchableOpacity>
