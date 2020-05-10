@@ -37,11 +37,9 @@ expo start
 
 
 ### Wireframe
-1. Login page
-2. Shopping list page
-3. Tag management page
-4. Shopping list management page
-
+![alt text](https://github.com/chang90/MyShoppingListV2/blob/master/wireframe/design1.png 'wireframe1')
+![alt text](https://github.com/chang90/MyShoppingListV2/blob/master/wireframe/design2.png 'wireframe2')
+![alt text](https://github.com/chang90/MyShoppingListV2/blob/master/wireframe/design3.png 'wireframe3')
 ### Database design
 1. User table
 2. Shopping item table
