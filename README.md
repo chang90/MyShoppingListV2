@@ -35,6 +35,19 @@ expo start
 ```
 4. Download and run expo app, use expo app to scan QR code to visit my app
 
+
+### Wireframe
+1. Login page
+2. Shopping list page
+3. Tag management page
+4. Shopping list management page
+
+### Database design
+1. User table
+2. Shopping item table
+3. Tag table
+
+
 ## 3. Authors
 * **CHANG LIU** - *Initial work* - [hiby90hou](https://github.com/chang90)
 
