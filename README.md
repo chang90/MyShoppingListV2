@@ -40,13 +40,37 @@ expo start
 ![alt text](https://github.com/chang90/MyShoppingListV2/blob/master/wireframe/design1.png 'wireframe1')
 ![alt text](https://github.com/chang90/MyShoppingListV2/blob/master/wireframe/design2.png 'wireframe2')
 ![alt text](https://github.com/chang90/MyShoppingListV2/blob/master/wireframe/design3.png 'wireframe3')
+
 ### Database design
 
- | Id     | Name          | Create-date         | Update-date         | Expiry-date         | Notes       | Status    | Tags-group-id | Shopping-list-id
- | 1      | Apple         | 2020-01-01 08:00:00 | 2020-01-01 08:00:00 | 2020-01-04 08:00:00 | Free apple! | 2(brought)| 1 | 1
- | 2      | Banana        | 2020-01-02 08:00:00 | 2020-01-02 08:00:00 | null                | null        | 1(require)| 2 | 1
- | 3      | Laundry Powder| 2020-01-02 08:00:00 | 2020-01-02 08:00:00 | null                | null        | 2(brought)| 3 | 1
-3. Tag table
+1. Item table
+
+ | Id     | Name          | Create-date         | Update-date         | Expiry-date         | Notes       | Status    | Tags | Shopping-list-id
+ | ---    | ---           | ---                 | ---                 | ---                 | ---         | ---       | ---           | ---
+ | 1      | Apple         | 2020-01-01 08:00:00 | 2020-01-01 08:00:00 | 2020-01-04 08:00:00 | Free apple! | 2(brought)| [tag-id-1,tag-id-2] | 1
+ | 2      | Banana        | 2020-01-02 08:00:00 | 2020-01-02 08:00:00 | null                | null        | 1(require)| [tag-id-2] | 1
+ | 3      | Laundry Powder | 2020-01-02 08:00:00 | 2020-01-02 08:00:00 | null                | null        | 3(complete)| [tag-id-3] | 1
+ 
+2. Tags table
+
+| Id       | Name              | Create-date         | Update-date         | default |  color
+| ---      | ---               | ---                 | ---                 | ---     |   ---
+| tag-id-1 | easy to expire    | 2020-01-01 08:00:00 | 2020-01-01 08:00:00 | true    |  #ccc
+| tag-id-2 | fridge            | 2020-01-01 08:00:00 | 2020-01-01 08:00:00 | false   |  #abc
+| tag-id-3 | Laundry           | 2020-01-01 08:00:00 | 2020-01-01 08:00:00 | false   |  #abd
+
+3. Shoppinglist table
+
+| Id       | Name              | Create-date         | Update-date         | Complete-date       |  user-id
+| ---      | ---               | ---                 | ---                 | ---                 |  ---
+| 1        | Goods for lunch   | 2020-01-01 08:00:00 | 2020-01-02 08:00:00 | 2020-01-02 08:00:00 | 1
+
+4. User table
+
+| Id       | Name              | Create-date         | Update-date         | Connect-to-cloud|
+| ---      | ---               | ---                 | ---                 | ---             |
+| 1        | default user      | 2020-01-01 08:00:00 | 2020-01-01 08:00:00 | false           |  
+
 
 
 ## 3. Authors
