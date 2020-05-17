@@ -3,9 +3,11 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, Button, TouchableOpacity, TextInput, Image, Switch } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
+import * as SQLite from 'expo-sqlite';
+const db = SQLite.openDatabase("ShoppingList.db");
 
 type RootStackParamList = {
-  Home: undefined;
+  Home: object;
   Profile: { userId: string };
   Feed: { sort: 'latest' | 'top' } | undefined;
 };
@@ -111,7 +113,23 @@ export function LoginScreen({ route, navigation }: Props) {
   const [autoLogin, setAutoLogin] = useState(true);
 
   const func = (value: boolean) => setAutoLogin(value);
-  const closeWindow = () => {navigation.navigate('Home')};
+  const closeWindow = () => {
+    navigation.navigate("Home", {userId: 1})
+  };
+  React.useEffect(() => {
+    db.transaction(tx => {
+      tx.executeSql(
+        "create table if not exists users (id integer primary key not null, user_name text, create_date text, update_date text, password text, connect_to_cloud boolean);")
+      tx.executeSql("select * from users where id = 1", [], (_, { rows }) => {
+        console.log('users', rows)
+          if(rows.length == 0) {
+            // create default user
+            const currentDate = new Date().toUTCString();
+            tx.executeSql(`insert into users (user_name, create_date, update_date, connect_to_cloud) values ('default', '${currentDate}','${currentDate}',0);`);
+          }
+        })
+    });
+  }, []);
   return (
     <View style={styles.background}>
       <Image

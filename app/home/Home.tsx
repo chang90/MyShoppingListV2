@@ -30,13 +30,13 @@ type Item = {
 }
 export function HomeScreen({ route, navigation }: Props) {
   const [ table, setTable ] = useState([]);
+  const { userId } = route.params;
 
   const add = (text: string) => {
     // is text empty?
     if (text === null || text === "") {
       return false;
     }
-
     db.transaction(
       tx => {
         const currentDate = new Date().toUTCString();
@@ -46,11 +46,11 @@ export function HomeScreen({ route, navigation }: Props) {
         );
         tx.executeSql("select * from items", [], (_, { rows }) => {
           setTable((rows as any)._array);
-        }
-      );
+        });
       }
     );
   }
+  
   React.useEffect(() => {
     db.transaction(tx => {
       console.log('create')
@@ -59,6 +59,9 @@ export function HomeScreen({ route, navigation }: Props) {
       tx.executeSql("select * from items", [], (_, { rows }) => {
         setTable((rows as any)._array);
         })
+      tx.executeSql(`select * from users where id = ${userId}`, [], (_, { rows }) => {
+          console.log('row',rows)
+        });
     });
   }, []);
   return (
@@ -74,8 +77,8 @@ export function HomeScreen({ route, navigation }: Props) {
       />
       <View>
         {
-          table.map((item: Item) => {
-          return <Text>{item.id} {item.item_name}</Text>
+          table.map((item: Item, index:number ) => {
+          return <Text key={index}>{item.id} {item.item_name}</Text>
           })
         }
       </View>
