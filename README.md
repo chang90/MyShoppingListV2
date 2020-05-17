@@ -67,9 +67,9 @@ expo start
 
 4. User table
 
-| Id       | Name              | Create-date         | Update-date         | Connect-to-cloud|
-| ---      | ---               | ---                 | ---                 | ---             |
-| 1        | default user      | 2020-01-01 08:00:00 | 2020-01-01 08:00:00 | false           |  
+| Id       | Name              | Create-date         | Update-date         | Connect-to-cloud| password
+| ---      | ---               | ---                 | ---                 | ---             | ---
+| 1        | default user      | 2020-01-01 08:00:00 | 2020-01-01 08:00:00 | false           |  null
 
 
 
