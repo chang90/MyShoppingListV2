@@ -41,8 +41,11 @@ expo start
 ![alt text](https://github.com/chang90/MyShoppingListV2/blob/master/wireframe/design2.png 'wireframe2')
 ![alt text](https://github.com/chang90/MyShoppingListV2/blob/master/wireframe/design3.png 'wireframe3')
 ### Database design
-1. User table
-2. Shopping item table
+
+ | Id     | Name          | Create-date         | Update-date         | Expiry-date         | Notes       | Status    | Tags-group-id | Shopping-list-id
+ | 1      | Apple         | 2020-01-01 08:00:00 | 2020-01-01 08:00:00 | 2020-01-04 08:00:00 | Free apple! | 2(brought)| 1 | 1
+ | 2      | Banana        | 2020-01-02 08:00:00 | 2020-01-02 08:00:00 | null                | null        | 1(require)| 2 | 1
+ | 3      | Laundry Powder| 2020-01-02 08:00:00 | 2020-01-02 08:00:00 | null                | null        | 2(brought)| 3 | 1
 3. Tag table
 
 
