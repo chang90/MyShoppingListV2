@@ -68,13 +68,13 @@ expo start
 | item-tag-id-3  | 2                 | tag-id-1            |
 | item-tag-id-4  | 3                 | tag-id-3            |
 
-3. Shoppinglist table
+4. Shoppinglist table
 
 | Id       | Name              | Create-date         | Update-date         | Complete-date       |  user-id
 | ---      | ---               | ---                 | ---                 | ---                 |  ---
 | 1        | Goods for lunch   | 2020-01-01 08:00:00 | 2020-01-02 08:00:00 | 2020-01-02 08:00:00 | 1
 
-4. User table
+5. User table
 
 | Id       | Name              | Create-date         | Update-date         | Connect-to-cloud| password
 | ---      | ---               | ---                 | ---                 | ---             | ---
