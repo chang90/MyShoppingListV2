@@ -5,6 +5,7 @@ import { NavigationContainer, RouteProp } from '@react-navigation/native';
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import { LoginScreen } from './app/login/Login';
 import { HomeScreen } from './app/home/Home';
+import { ShoppingListScreen } from './app/Shopping-list/ShoppingList';
 
 
 function Profile() {
@@ -25,6 +26,11 @@ export default function App() {
           name="Login"
           component={LoginScreen}
           options={{title: 'Login'}}
+        />
+        <Stack.Screen
+          name="ShoppingList"
+          component={ShoppingListScreen}
+          options={{title: 'Shopping Lists'}}
         />
         <Stack.Screen
           name="Home"
