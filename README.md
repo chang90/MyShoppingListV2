@@ -45,11 +45,11 @@ expo start
 
 1. Item table
 
- | Id     | Name          | Create-date         | Update-date         | Expiry-date         | Notes       | Status    | Tags | Shopping-list-id
+ | Id     | Name          | Create-date         | Update-date         | Expiry-date         | Notes       | Status    | Shopping-list-id
  | ---    | ---           | ---                 | ---                 | ---                 | ---         | ---       | ---           | ---
- | 1      | Apple         | 2020-01-01 08:00:00 | 2020-01-01 08:00:00 | 2020-01-04 08:00:00 | Free apple! | 2(brought)| [tag-id-1,tag-id-2] | 1
- | 2      | Banana        | 2020-01-02 08:00:00 | 2020-01-02 08:00:00 | null                | null        | 1(require)| [tag-id-2] | 1
- | 3      | Laundry Powder | 2020-01-02 08:00:00 | 2020-01-02 08:00:00 | null                | null        | 3(complete)| [tag-id-3] | 1
+ | 1      | Apple         | 2020-01-01 08:00:00 | 2020-01-01 08:00:00 | 2020-01-04 08:00:00 | Free apple! | 2(brought)| 1
+ | 2      | Banana        | 2020-01-02 08:00:00 | 2020-01-02 08:00:00 | null                | null        | 1(require)| 1
+ | 3      | Laundry Powder | 2020-01-02 08:00:00 | 2020-01-02 08:00:00 | null                | null        | 3(complete)| 1
  
 2. Tags table
 
@@ -58,6 +58,15 @@ expo start
 | tag-id-1 | easy to expire    | 2020-01-01 08:00:00 | 2020-01-01 08:00:00 | true    |  #ccc
 | tag-id-2 | fridge            | 2020-01-01 08:00:00 | 2020-01-01 08:00:00 | false   |  #abc
 | tag-id-3 | Laundry           | 2020-01-01 08:00:00 | 2020-01-01 08:00:00 | false   |  #abd
+
+3. Item tag matching table
+
+| Id             | Item-id           | Tag-id              |
+| ---            | ---               | ---                 |
+| item-tag-id-1  | 1                 | tag-id-1            |
+| item-tag-id-2  | 1                 | tag-id-2            |
+| item-tag-id-3  | 2                 | tag-id-1            |
+| item-tag-id-4  | 3                 | tag-id-3            |
 
 3. Shoppinglist table
 
