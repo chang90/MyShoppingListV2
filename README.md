@@ -46,7 +46,7 @@ expo start
 1. Item table
 
  | Id     | Name          | Create-date         | Update-date         | Expiry-date         | Notes       | Status    | Shopping-list-id
- | ---    | ---           | ---                 | ---                 | ---                 | ---         | ---       | ---           | ---
+ | ---    | ---           | ---                 | ---                 | ---                 | ---         | ---       | ---          
  | 1      | Apple         | 2020-01-01 08:00:00 | 2020-01-01 08:00:00 | 2020-01-04 08:00:00 | Free apple! | 2(brought)| 1
  | 2      | Banana        | 2020-01-02 08:00:00 | 2020-01-02 08:00:00 | null                | null        | 1(require)| 1
  | 3      | Laundry Powder | 2020-01-02 08:00:00 | 2020-01-02 08:00:00 | null                | null        | 3(complete)| 1
