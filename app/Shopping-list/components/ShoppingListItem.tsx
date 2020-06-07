@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Button, Text } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
@@ -26,7 +26,12 @@ type Props = {
 
 const styles = StyleSheet.create({
   shoppingListContainer: {
-    flex: 1
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: 10,
+    borderBottomWidth: 2,
+    borderBottomColor: '#ccc'
   },
   shoppingListTitle: {
     fontWeight: 'bold',
@@ -38,7 +43,9 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 10,
     paddingRight: 10,
-    height: "auto"
+    height: "auto",
+    backgroundColor: 'rgba(255, 0, 255, 0)',
+    color: '#009688'
   }
 });
 
@@ -48,10 +55,12 @@ export function ShoppingListItem({ shoppingListTitle, navigation }: Props) {
       <View style={styles.shoppingListTitle}>
         <Text>{shoppingListTitle}</Text>
       </View>
-      <Button
+      <TouchableOpacity
+        style={styles.shoppingListTitle}
         onPress={() => navigation.navigate('Profile')}
-        title="Press Me"
-      />
+      >
+        <Text>></Text>
+      </TouchableOpacity>
     </View>
   );
 }
