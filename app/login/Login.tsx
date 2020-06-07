@@ -122,21 +122,22 @@ export function LoginScreen({ route, navigation }: Props) {
 
       // Clean up old DB data
       // console.log('drop table')
-      // tx.executeSql("DROP TABLE users;");
-      // tx.executeSql("DROP TABLE shopping_lists;");
-      // tx.executeSql("DROP TABLE tags;");
-      // tx.executeSql("DROP TABLE items;",[], 
+      // tx.executeSql("PRAGMA foreign_keys = OFF;")
+      // tx.executeSql("DROP TABLE IF EXISTS users;");
+      // tx.executeSql("DROP TABLE IF EXISTS shopping_lists;");
+      // tx.executeSql("DROP TABLE IF EXISTS tags;");
+      // tx.executeSql("DROP TABLE IF EXISTS items;",[], 
       //   function(error){
       //     console.log("item table Could not delete");
       //   }
       // );
-      // tx.executeSql("DROP TABLE item_tags;");
+      // tx.executeSql("DROP TABLE IF EXISTS item_tags;");
       // tx.executeSql("PRAGMA foreign_keys = ON;")
 
       // Init database and set up default value
       // Create Users table
       tx.executeSql(
-        "create table if not exists users (id integer primary key not null, user_name text, create_date text, update_date text, password text, connect_to_cloud boolean);");
+        "create table if not exists users (id integer primary key not null, user_name text, created_date text, updated_date text, password text, connect_to_cloud boolean);");
 
       // Create Shopping Lists table
       tx.executeSql(
@@ -148,16 +149,8 @@ export function LoginScreen({ route, navigation }: Props) {
 
       // Create Items table
       tx.executeSql(
-        "create table if not exists items (id integer primary key not null, item_name text, create_date text, update_date text, expiry_date text, notes text, status number not null, shoppinglist_id integer not null);");
+        "create table if not exists items (id integer primary key not null, item_name text, created_date text, updated_date text, expiry_date text, notes text, status number not null, shoppinglist_id integer not null);");
 
-      const currentDate = new Date().toUTCString();
-      tx.executeSql(`insert into items (item_name, create_date, update_date, status, shoppinglist_id) values ('loginpage', '${currentDate}', '${currentDate}', ${1}, ${1})`, [], error =>
-        console.log(error)
-      );
-
-      tx.executeSql("select * from items", [], (_, { rows }) => {
-        console.log('items: ',rows);
-    });
       // Create Item Tag matching table
       tx.executeSql(
         "create table if not exists item_tags (id integer primary key not null, item_id integer, tag_id integer);");
@@ -167,7 +160,7 @@ export function LoginScreen({ route, navigation }: Props) {
         if (rows.length == 0) {
           // create default user
           const currentDate = new Date().toUTCString();
-          tx.executeSql(`insert into users (user_name, create_date, update_date, connect_to_cloud) values ('default', '${currentDate}','${currentDate}',0);`);
+          tx.executeSql(`insert into users (user_name, created_date, updated_date, connect_to_cloud) values ('default', '${currentDate}','${currentDate}',0);`);
         }
       })
       

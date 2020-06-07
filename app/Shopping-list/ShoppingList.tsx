@@ -25,9 +25,9 @@ type Props = {
   navigation: ProfileScreenNavigationProp;
 };
 
-type Item = {
+type Shopping_list = {
   id: number;
-  item_name: string;
+  shopping_list_name: string;
 }
 export function ShoppingListScreen({ route, navigation }: Props) {
   const [ table, setTable ] = useState([]);
@@ -41,10 +41,8 @@ export function ShoppingListScreen({ route, navigation }: Props) {
     db.transaction(
       tx => {
         const currentDate = new Date().toUTCString();
-        tx.executeSql(`insert into items (item_name, create_date, update_date, status, shoppinglist_id) values ('${text}', '${currentDate}', '${currentDate}', ${1}, ${1})`,[], error => 
-          console.log(error)
-        );
-        tx.executeSql("select * from items", [], (_, { rows }) => {
+        tx.executeSql(`INSERT INTO shopping_lists (shopping_list_name, created_date, updated_date, user_id ) VALUES ('today''s shopping list', '${currentDate}','${currentDate}',${userId});`);
+        tx.executeSql("select * from shopping_lists", [], (_, { rows }) => {
           setTable((rows as any)._array);
         });
       }
@@ -53,33 +51,34 @@ export function ShoppingListScreen({ route, navigation }: Props) {
   
   React.useEffect(() => {
     db.transaction(tx => {
-      console.log('create')
-      tx.executeSql("select * from items", [], (_, { rows }) => {
-        setTable((rows as any)._array);
-        })
-      tx.executeSql(`select * from users where id = ${userId}`, [], (_, { rows }) => {
-          console.log('row',rows)
-        });
+      tx.executeSql("SELECT id FROM shopping_lists WHERE id=1;", [], (_, { rows }) => {
+        console.log(rows.length)
+        if (rows.length == 0) {
+          console.log('add default shopping list')
+          // create default shoppinglist
+          const currentDate = new Date().toUTCString();
+          tx.executeSql(`INSERT INTO shopping_lists (shopping_list_name, created_date, updated_date, user_id ) VALUES ('today''s shopping list', '${currentDate}','${currentDate}',${userId});`);
+        }
+        tx.executeSql("select * from shopping_lists", [], (_, { rows }) => {
+          setTable((rows as any)._array);
+          })
+      })
     });
   }, []);
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Home Screen</Text>
-      <Button
-        title="dashboard"
-        onPress={() => navigation.navigate('Profile')}
-      />
+      <View>
+        {
+          table.map((shopping_list: Shopping_list, index:number ) => {
+          return <Text key={index}>{shopping_list.id} {shopping_list.shopping_list_name}</Text>
+          })
+        }
+      </View>
       <Button
         title="add"
         onPress={()=>{add('pear')}}
       />
-      <View>
-        {
-          table.map((item: Item, index:number ) => {
-          return <Text key={index}>{item.id} {item.item_name}</Text>
-          })
-        }
-      </View>
+      
     </View>
     
   );
