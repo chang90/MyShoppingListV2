@@ -1,10 +1,10 @@
 import 'react-native-gesture-handler';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button, TouchableHighlightBase } from 'react-native';
+import { Text, ScrollView, Button } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import * as SQLite from 'expo-sqlite';
 import SqlDatabase from '../shared-service/Sql-database';
+import { ShoppingListItem } from './components/ShoppingListItem';
 const db = SqlDatabase.getConnection();
 
 type RootStackParamList = {
@@ -30,7 +30,7 @@ type Shopping_list = {
   shopping_list_name: string;
 }
 export function ShoppingListScreen({ route, navigation }: Props) {
-  const [ table, setTable ] = useState([]);
+  const [table, setTable] = useState([]);
   const { userId } = route.params;
 
   const add = (text: string) => {
@@ -48,11 +48,10 @@ export function ShoppingListScreen({ route, navigation }: Props) {
       }
     );
   }
-  
+
   React.useEffect(() => {
     db.transaction(tx => {
       tx.executeSql("SELECT id FROM shopping_lists WHERE id=1;", [], (_, { rows }) => {
-        console.log(rows.length)
         if (rows.length == 0) {
           console.log('add default shopping list')
           // create default shoppinglist
@@ -61,25 +60,27 @@ export function ShoppingListScreen({ route, navigation }: Props) {
         }
         tx.executeSql("select * from shopping_lists", [], (_, { rows }) => {
           setTable((rows as any)._array);
-          })
+        })
       })
     });
   }, []);
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <View>
-        {
-          table.map((shopping_list: Shopping_list, index:number ) => {
-          return <Text key={index}>{shopping_list.id} {shopping_list.shopping_list_name}</Text>
-          })
-        }
-      </View>
+    <ScrollView>
+      {
+        table.map((shopping_list: Shopping_list, index: number) => {
+          return <ShoppingListItem
+            shoppingListId ={shopping_list.id}
+            shoppingListTitle = {shopping_list.shopping_list_name}
+            route = {route}
+            navigation = {navigation}
+            key={index}
+           />
+        })
+      }
       <Button
         title="add"
-        onPress={()=>{add('pear')}}
+        onPress={() => { add('pear') }}
       />
-      
-    </View>
-    
+    </ScrollView>  
   );
 }
