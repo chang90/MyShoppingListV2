@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Text, ScrollView, View, Button } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import SqlDatabase from '../shared-service/Sql-database';
+import { ToDoItem } from './components/ToDoItem';
 const db = SqlDatabase.getConnection();
 
 type RootStackParamList = {
@@ -16,9 +17,22 @@ type Props = {
   route: ShoppingListDetailsScreenRouteProp;
 };
 
-type Item = {
+const deleteTodo = () =>{
+  console.log('delete todo item');
+}
+
+const updateTodoItem = (todo: any) => {
+  console.log('update todo item', todo);
+}
+
+export type Item = {
   id: number;
   item_name: string;
+  created_date: string;
+  updated_date: string;
+  expiry_date: string;
+  notes: string;
+  status: number;
 }
 export function ShoppingListDetailsScreen({ route }: Props) {
   const [ table, setTable ] = useState([]);
@@ -48,23 +62,21 @@ export function ShoppingListDetailsScreen({ route }: Props) {
       console.log('create')
       tx.executeSql(`select * from items where shoppinglist_id = ${shoppinglist_id}`, [], (_, { rows }) => {
         setTable((rows as any)._array);
-        })
+      })
     });
   }, []);
   return (
     <ScrollView >
-      <Text>Home Screen</Text>
+
+      {
+        table.map((item: Item, index:number ) => {
+          return <ToDoItem key={index} todo={item} deleteTodo={deleteTodo} updateTodoItem={updateTodoItem}></ToDoItem>
+        })
+      }
       <Button
         title="add"
         onPress={()=>{add('apple')}}
       />
-      <View>
-        {
-          table.map((item: Item, index:number ) => {
-          return <Text key={index}>{item.id} {item.item_name}</Text>
-          })
-        }
-      </View>
     </ScrollView>
     
   );
