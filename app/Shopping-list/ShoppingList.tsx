@@ -11,6 +11,7 @@ type RootStackParamList = {
   Home: undefined;
   Profile: { userId: string };
   Feed: { sort: 'latest' | 'top' } | undefined;
+  ShoppingListDetails: { shoppinglist_id: number };
 };
 
 type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'Profile'>;

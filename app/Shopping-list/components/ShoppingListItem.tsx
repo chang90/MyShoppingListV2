@@ -7,6 +7,7 @@ type RootStackParamList = {
   Home: undefined;
   Profile: { userId: string };
   Feed: { sort: 'latest' | 'top' } | undefined;
+  ShoppingListDetails: { shoppinglist_id: number };
 };
 
 type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'Profile'>;
@@ -49,7 +50,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export function ShoppingListItem({ shoppingListTitle, navigation }: Props) {
+export function ShoppingListItem({ shoppingListTitle, shoppingListId, navigation }: Props) {
   return (
     <View style={styles.shoppingListContainer}>
       <View style={styles.shoppingListTitle}>
@@ -57,7 +58,7 @@ export function ShoppingListItem({ shoppingListTitle, navigation }: Props) {
       </View>
       <TouchableOpacity
         style={styles.shoppingListTitle}
-        onPress={() => navigation.navigate('Profile')}
+        onPress={() => navigation.navigate('ShoppingListDetails', { shoppinglist_id: shoppingListId })}
       >
         <Text>></Text>
       </TouchableOpacity>
