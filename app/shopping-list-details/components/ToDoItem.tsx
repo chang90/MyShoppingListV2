@@ -1,15 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, CheckBox, Button, Alert, ToastAndroid } from 'react-native';
-import { RouteProp } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { Item } from '../ShoppingListDetails';
-
-type RootStackParamList = {
-  Home: undefined;
-  Profile: { userId: string };
-  Feed: { sort: 'latest' | 'top' } | undefined;
-  ShoppingListDetails: { shoppinglist_id: number };
-};
 
 type Props = {
   todo: Item;
@@ -85,10 +76,10 @@ const findStatusColor = (expireDate: Date | null): Color | null => {
 
 const deleteTodoWithConfirm = (todo: any, callback: Function) => {
   Alert.alert(
-    'Are you sure to delete '+ todo.title+'?',
+    'Are you sure to delete ' + todo.item_name + '?',
     'This operation cannot be undone',
     [		    
-      {text: 'Yes', onPress: () =>callback(todo.id)},
+      {text: 'Yes', onPress: () => callback(todo.id)},
       {text: 'No', onPress: () =>{} },
     ],
     { cancelable: true }

@@ -1,9 +1,10 @@
 import 'react-native-gesture-handler';
 import React, { useState } from 'react';
-import { Text, ScrollView, View, Button } from 'react-native';
+import { StyleSheet, ScrollView, View, Button } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import SqlDatabase from '../shared-service/Sql-database';
 import { ToDoItem } from './components/ToDoItem';
+import { AddItem } from './components/AddItem';
 const db = SqlDatabase.getConnection();
 
 type RootStackParamList = {
@@ -17,14 +18,6 @@ type Props = {
   route: ShoppingListDetailsScreenRouteProp;
 };
 
-const deleteTodo = () =>{
-  console.log('delete todo item');
-}
-
-const updateTodoItem = (todo: any) => {
-  console.log('update todo item', todo);
-}
-
 export type Item = {
   id: number;
   item_name: string;
@@ -34,9 +27,40 @@ export type Item = {
   notes: string;
   status: number;
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flexGrow: 1
+  }
+})
+
+
+
+
 export function ShoppingListDetailsScreen({ route }: Props) {
   const [ table, setTable ] = useState([]);
   const { shoppinglist_id } = route.params;
+
+  const deleteTodo = (id: number) => {
+    db.transaction(
+      tx => {
+        // Remove tags with this item Id
+        tx.executeSql(`DELETE FROM item_tags WHERE item_id = ${id};`);
+  
+        //Remove item
+        tx.executeSql(`DELETE FROM items WHERE id = ${id};`);
+
+        tx.executeSql(`select * from items where shoppinglist_id = ${shoppinglist_id}`, [], (_, { rows }) => {
+          setTable((rows as any)._array);
+        });
+      }
+    );
+  }
+
+  const updateTodoItem = (todo: any) => {
+    console.log('update todo item', todo);
+  }
+  
 
   const add = (text: string) => {
     // is text empty?
@@ -66,18 +90,21 @@ export function ShoppingListDetailsScreen({ route }: Props) {
     });
   }, []);
   return (
-    <ScrollView >
+    <View style={styles.container}>
+      <ScrollView>
+        {
+          table.map((item: Item, index: number) => {
+            return <ToDoItem key={index} todo={item} deleteTodo={deleteTodo} updateTodoItem={updateTodoItem}></ToDoItem>
+          })
+        }
+        <Button
+          title="add"
+          onPress={() => { add('apple') }}
+        />
+      </ScrollView>
+      <AddItem />
+    </View>
 
-      {
-        table.map((item: Item, index:number ) => {
-          return <ToDoItem key={index} todo={item} deleteTodo={deleteTodo} updateTodoItem={updateTodoItem}></ToDoItem>
-        })
-      }
-      <Button
-        title="add"
-        onPress={()=>{add('apple')}}
-      />
-    </ScrollView>
     
   );
 }
