@@ -45,7 +45,7 @@ expo start
 
 1. Item table
 
- | Id     | Name          | Create-date         | Update-date         | Expiry-date         | Notes       | Status    | Shopping-list-id
+ | Id     | Name          | Created-date         | Updated-date         | Expiry-date         | Notes       | Status    | Shopping-list-id
  | ---    | ---           | ---                 | ---                 | ---                 | ---         | ---       | ---          
  | 1      | Apple         | 2020-01-01 08:00:00 | 2020-01-01 08:00:00 | 2020-01-04 08:00:00 | Free apple! | 2(brought)| 1
  | 2      | Banana        | 2020-01-02 08:00:00 | 2020-01-02 08:00:00 | null                | null        | 1(require)| 1
@@ -53,7 +53,7 @@ expo start
  
 2. Tags table
 
-| Id       | Name              | Create-date         | Update-date         | default |  color
+| Id       | Name              | Created-date         | Updated-date         | default |  color
 | ---      | ---               | ---                 | ---                 | ---     |   ---
 | tag-id-1 | easy to expire    | 2020-01-01 08:00:00 | 2020-01-01 08:00:00 | true    |  #ccc
 | tag-id-2 | fridge            | 2020-01-01 08:00:00 | 2020-01-01 08:00:00 | false   |  #abc
@@ -70,13 +70,13 @@ expo start
 
 4. Shoppinglist table
 
-| Id       | Name              | Create-date         | Update-date         | Complete-date       |  user-id
+| Id       | Name              | Created-date         | Updated-date         | Completed-date       |  user-id
 | ---      | ---               | ---                 | ---                 | ---                 |  ---
 | 1        | Goods for lunch   | 2020-01-01 08:00:00 | 2020-01-02 08:00:00 | 2020-01-02 08:00:00 | 1
 
 5. User table
 
-| Id       | Name              | Create-date         | Update-date         | Connect-to-cloud| password
+| Id       | Name              | Created-date         | Updated-date         | Connect-to-cloud| password
 | ---      | ---               | ---                 | ---                 | ---             | ---
 | 1        | default user      | 2020-01-01 08:00:00 | 2020-01-01 08:00:00 | false           |  null
 
