@@ -27,7 +27,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 20,
     overflow: "hidden",
-    alignItems: "center",
+    justifyContent: "space-between",
+    position: "relative",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -61,7 +62,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
-    width: "100%"
+    justifyContent: "space-between"
   },
   modalTitle: {
     padding: 15,
