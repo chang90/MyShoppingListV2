@@ -12,6 +12,7 @@ import { CreateItemQuery, Item } from "../ShoppingListDetails";
 
 type Props = {
   modifyItem: Function,
+  unSelectItem: Function,
   itemSelected?: Item | null
 };
 
@@ -110,7 +111,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export function AddItem({ itemSelected, modifyItem }: Props) {
+export function AddItem({ itemSelected, modifyItem, unSelectItem }: Props) {
   const [modalVisible, setModalVisible] = useState(false);
   const [itemName, setItemName] = useState('');
   const [itemNote, setItemNote] = useState('');
@@ -138,8 +139,12 @@ export function AddItem({ itemSelected, modifyItem }: Props) {
 
   React.useEffect(() => {
     if(itemSelected) {
+      setModalVisible(true);
       setItemName(itemSelected?.item_name);
       setItemNote(itemSelected?.notes);
+    } else {
+      setItemName('');
+      setItemNote('');
     }
     
   }, [itemSelected]);
@@ -156,11 +161,12 @@ export function AddItem({ itemSelected, modifyItem }: Props) {
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Add new item</Text>
+              <Text style={styles.modalTitle}>{itemSelected ? 'Edit': 'Add new item'}</Text>
               <TouchableHighlight
                 style={styles.modalCloseBtn}
                 onPress={() => {
                   setModalVisible(!modalVisible);
+                  unSelectItem();
                 }}
               >
                 <Text>x</Text>
@@ -197,7 +203,7 @@ export function AddItem({ itemSelected, modifyItem }: Props) {
               <TouchableHighlight
                 style={styles.submitButton}
                 onPress={addOrEditItem}>
-                <Text style={styles.submitButtonText}>Add</Text>
+                <Text style={styles.submitButtonText}>{itemSelected ? 'Edit': 'Add'}</Text>
               </TouchableHighlight>
             </View>
 

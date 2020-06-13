@@ -64,28 +64,8 @@ export function ShoppingListDetailsScreen({ route }: Props) {
     );
   }
 
-  const updateTodoItem = (todo: any) => {
-    console.log('update todo item', todo);
-  }
-
-
-  const add = (text: string) => {
-    // is text empty?
-    if (text === null || text === "") {
-      return false;
-    }
-    db.transaction(
-      tx => {
-        const currentDate = new Date().toUTCString();
-
-        tx.executeSql(`insert into items (item_name, created_date, updated_date, status, shoppinglist_id) values ('${text}', '${currentDate}', '${currentDate}', ${1}, ${shoppinglist_id})`, [], error =>
-          console.log(error)
-        );
-        tx.executeSql(`select * from items where shoppinglist_id = ${shoppinglist_id}`, [], (_, { rows }) => {
-          setTable((rows as any)._array);
-        });
-      }
-    );
+  const unSelectItem = () => {
+    setItemSelected(null);
   }
   const handleModifyItem = (itemObj: Item | CreateItemQuery) => {
     db.transaction(
@@ -138,8 +118,7 @@ export function ShoppingListDetailsScreen({ route }: Props) {
           })
         }
       </ScrollView>
-      <Text>{itemSelected?.item_name}</Text>
-      <AddItem modifyItem={handleModifyItem} itemSelected={itemSelected}/>
+      <AddItem modifyItem={handleModifyItem} itemSelected={itemSelected} unSelectItem={unSelectItem}/>
     </View>
 
 
