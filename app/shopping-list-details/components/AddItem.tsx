@@ -6,11 +6,13 @@ import {
   Text,
   TouchableHighlight,
   View,
-  TextInput
+  TextInput,
+  Button
 } from "react-native";
 
 type Props = {
-
+  modifyItem: Function,
+  itemId?: number | null
 };
 
 const styles = StyleSheet.create({
@@ -49,6 +51,16 @@ const styles = StyleSheet.create({
     bottom: 100,
     right: 20
 
+  },
+  submitButton: {
+    backgroundColor:'#009688',
+    marginTop: 5,
+    padding: 5,
+    borderRadius: 5
+  },
+  submitButtonText:{
+    color: "#fff",
+    textAlign: "center"
   },
   textStyle: {
     color: "white",
@@ -98,10 +110,22 @@ const styles = StyleSheet.create({
   }
 });
 
-export function AddItem({ }: Props) {
+export function AddItem({ itemId, modifyItem }: Props) {
   const [modalVisible, setModalVisible] = useState(false);
   const [itemName, setItemName] = useState('');
   const [itemNote, setItemNote] = useState('');
+
+  const addOrEditItem = () => {
+    // is text empty?
+    if (itemName === null || itemName === "") {
+      return false;
+    }
+    modifyItem(itemId, itemName, itemNote);
+    setModalVisible(!modalVisible);
+    setItemName('');
+    setItemNote('');
+
+  }
   return (
     <View style={styles.buttonContainer}>
       <Modal
@@ -153,6 +177,11 @@ export function AddItem({ }: Props) {
                 onChangeText={text => setItemNote(text)}
                 value={itemNote}
               />
+              <TouchableHighlight
+                style={styles.submitButton}
+                onPress={addOrEditItem}>
+                <Text style={styles.submitButtonText}>Add</Text>
+              </TouchableHighlight>
             </View>
 
 
