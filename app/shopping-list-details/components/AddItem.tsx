@@ -6,13 +6,13 @@ import {
   Text,
   TouchableHighlight,
   View,
-  TextInput,
-  Button
+  TextInput
 } from "react-native";
+import { CreateItemQuery, Item } from "../ShoppingListDetails";
 
 type Props = {
   modifyItem: Function,
-  itemId?: number | null
+  itemSelected?: Item | null
 };
 
 const styles = StyleSheet.create({
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   }
 });
 
-export function AddItem({ itemId, modifyItem }: Props) {
+export function AddItem({ itemSelected, modifyItem }: Props) {
   const [modalVisible, setModalVisible] = useState(false);
   const [itemName, setItemName] = useState('');
   const [itemNote, setItemNote] = useState('');
@@ -120,12 +120,29 @@ export function AddItem({ itemId, modifyItem }: Props) {
     if (itemName === null || itemName === "") {
       return false;
     }
-    modifyItem(itemId, itemName, itemNote);
+    if(!itemSelected) {
+      const newItemObj: CreateItemQuery = {
+        id: null,
+        item_name: itemName,
+        notes: itemNote
+      }
+      modifyItem(newItemObj);
+    } else {
+      modifyItem({...itemSelected, 'item_name': itemName, notes: itemNote});
+    }
+
     setModalVisible(!modalVisible);
     setItemName('');
     setItemNote('');
-
   }
+
+  React.useEffect(() => {
+    if(itemSelected) {
+      setItemName(itemSelected?.item_name);
+      setItemNote(itemSelected?.notes);
+    }
+    
+  }, [itemSelected]);
   return (
     <View style={styles.buttonContainer}>
       <Modal

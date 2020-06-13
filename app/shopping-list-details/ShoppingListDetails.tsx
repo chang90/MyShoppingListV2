@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { useState } from 'react';
-import { StyleSheet, ScrollView, View, Button } from 'react-native';
+import { StyleSheet, ScrollView, View, Text } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import SqlDatabase from '../shared-service/Sql-database';
 import { ToDoItem } from './components/ToDoItem';
@@ -28,6 +28,12 @@ export type Item = {
   status: number;
 }
 
+export type CreateItemQuery = {
+  id: number|null;
+  item_name: string;
+  notes: string;
+}
+
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1
@@ -38,8 +44,8 @@ const styles = StyleSheet.create({
 
 
 export function ShoppingListDetailsScreen({ route }: Props) {
-  const [ table, setTable ] = useState([]);
-  const [ itemId, setItemId ] = useState(null);
+  const [table, setTable] = useState([]);
+  const [itemSelected, setItemSelected] = useState<Item|null>(null);
   const { shoppinglist_id } = route.params;
 
   const deleteTodo = (id: number) => {
@@ -47,7 +53,7 @@ export function ShoppingListDetailsScreen({ route }: Props) {
       tx => {
         // Remove tags with this item Id
         tx.executeSql(`DELETE FROM item_tags WHERE item_id = ${id};`);
-  
+
         //Remove item
         tx.executeSql(`DELETE FROM items WHERE id = ${id};`);
 
@@ -61,7 +67,7 @@ export function ShoppingListDetailsScreen({ route }: Props) {
   const updateTodoItem = (todo: any) => {
     console.log('update todo item', todo);
   }
-  
+
 
   const add = (text: string) => {
     // is text empty?
@@ -71,8 +77,8 @@ export function ShoppingListDetailsScreen({ route }: Props) {
     db.transaction(
       tx => {
         const currentDate = new Date().toUTCString();
-      
-        tx.executeSql(`insert into items (item_name, created_date, updated_date, status, shoppinglist_id) values ('${text}', '${currentDate}', '${currentDate}', ${1}, ${shoppinglist_id})`,[], error => 
+
+        tx.executeSql(`insert into items (item_name, created_date, updated_date, status, shoppinglist_id) values ('${text}', '${currentDate}', '${currentDate}', ${1}, ${shoppinglist_id})`, [], error =>
           console.log(error)
         );
         tx.executeSql(`select * from items where shoppinglist_id = ${shoppinglist_id}`, [], (_, { rows }) => {
@@ -81,36 +87,38 @@ export function ShoppingListDetailsScreen({ route }: Props) {
       }
     );
   }
-  const handleModifyItem = (itemId: number|null, itemName: string, itemNote: string) => {
-    if(itemId != null) {
-      // If already select an item, modify this item in DB
-      db.transaction(
-        tx => {
-          const currentDate = new Date().toUTCString();
-          tx.executeSql(`UPDATE items SET item_name = '${itemName}', updated_date = '${currentDate}', notes = '${itemNote}' WHERE id = '${itemId}';`,[], error => 
+  const handleModifyItem = (itemObj: Item | CreateItemQuery) => {
+    db.transaction(
+      tx => {
+        const currentDate = new Date().toUTCString();
+        if (itemObj.id != null) {
+          // If already select an item, modify this item in DB
+          tx.executeSql(`UPDATE items SET item_name = '${itemObj.item_name}', updated_date = '${currentDate}', notes = '${itemObj.notes}' WHERE id = '${itemObj.id}';`, [], error =>
             console.log(error)
           );
           tx.executeSql(`select * from items where shoppinglist_id = ${shoppinglist_id}`, [], (_, { rows }) => {
             setTable((rows as any)._array);
           });
-        }
-      );
-    } else {
-      //add new item into the list
-      db.transaction(
-        tx => {
-          const currentDate = new Date().toUTCString();
-          tx.executeSql(`insert into items (item_name, created_date, updated_date, status, shoppinglist_id) values ('${itemName}', '${currentDate}', '${currentDate}', ${1}, ${shoppinglist_id})`,[], error => 
+        } else {
+          //add new item into the list
+          tx.executeSql(`insert into items (item_name, created_date, updated_date, notes, status, shoppinglist_id) values ('${itemObj.item_name}', '${currentDate}', '${currentDate}', '${itemObj.notes}', ${1}, ${shoppinglist_id})`, [], error =>
             console.log(error)
           );
-          tx.executeSql(`select * from items where shoppinglist_id = ${shoppinglist_id}`, [], (_, { rows }) => {
-            setTable((rows as any)._array);
-          });
         }
-      );
-    }
+        setItemSelected(null);
+        tx.executeSql(`select * from items where shoppinglist_id = ${shoppinglist_id}`, [], (_, { rows }) => {
+          setTable((rows as any)._array);
+        });
+      });
   }
-  
+  const openUpEditor = (item: Item) => {
+    if(item){
+      setItemSelected(item);
+      // Todo: open up modal
+    }
+    
+  }
+
   React.useEffect(() => {
     db.transaction(tx => {
       console.log('create')
@@ -121,20 +129,19 @@ export function ShoppingListDetailsScreen({ route }: Props) {
   }, []);
   return (
     <View style={styles.container}>
+      
       <ScrollView>
+        
         {
           table.map((item: Item, index: number) => {
-            return <ToDoItem key={index} todo={item} deleteTodo={deleteTodo} updateTodoItem={updateTodoItem}></ToDoItem>
+            return <ToDoItem key={index} todo={item} deleteTodo={deleteTodo} modifyItem={handleModifyItem} editItem={openUpEditor}></ToDoItem>
           })
         }
-        <Button
-          title="add"
-          onPress={() => { add('apple') }}
-        />
       </ScrollView>
-      <AddItem itemId={itemId} modifyItem={handleModifyItem}/>
+      <Text>{itemSelected?.item_name}</Text>
+      <AddItem modifyItem={handleModifyItem} itemSelected={itemSelected}/>
     </View>
 
-    
+
   );
 }

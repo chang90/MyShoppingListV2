@@ -5,7 +5,8 @@ import { Item } from '../ShoppingListDetails';
 type Props = {
   todo: Item;
   deleteTodo: Function;
-  updateTodoItem: Function;
+  modifyItem: Function;
+  editItem: Function;
   key: number;
 };
 
@@ -95,7 +96,7 @@ const handleChange = (todo: any, callback: Function) => {
   callback(todo);
 };
 
-export function ToDoItem({ todo, deleteTodo, updateTodoItem }: Props) {
+export function ToDoItem({ todo, deleteTodo, modifyItem, editItem }: Props) {
   const { item_name, notes, status } = todo;
   const expiry_date: Date | null = todo.expiry_date ? new Date(todo.expiry_date) : null;
   let color: Color = {
@@ -108,8 +109,10 @@ export function ToDoItem({ todo, deleteTodo, updateTodoItem }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <CheckBox value={isDone} onValueChange={()=>{handleChange(todo, updateTodoItem)}} />
-        <Text>{item_name}</Text>
+        <CheckBox value={isDone} onValueChange={()=>{handleChange(todo, modifyItem)}} />
+        <TouchableOpacity onPress={()=>{editItem(todo)}}>
+          <Text>{item_name}</Text>
+        </TouchableOpacity>
       </View>
       <Text style={[styles.expire_date, color.veryfresh && styles.gray_color, color.nearexpire && styles.red_color, color.isexpired && styles.dark_gray_color]}>
         {(expiry_date != null) ? ("Expire date:\n" + expiry_date.getFullYear() + "/" + (expiry_date.getMonth() + 1) + "/" + expiry_date.getDate()) : ""}
