@@ -5,6 +5,7 @@ import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import SqlDatabase from '../shared-service/Sql-database';
 import { ShoppingListItem } from './components/ShoppingListItem';
+import { AddShoppingList } from './components/AddShoppingList';
 const db = SqlDatabase.getConnection();
 
 type RootStackParamList = {
@@ -26,28 +27,44 @@ type Props = {
   navigation: ProfileScreenNavigationProp;
 };
 
-type Shopping_list = {
+export type ShoppingList = {
   id: number;
+  shopping_list_name: string;
+}
+
+export type CreateShoppingListQuery = {
+  id?: number;
   shopping_list_name: string;
 }
 export function ShoppingListScreen({ route, navigation }: Props) {
   const [table, setTable] = useState([]);
+  const [shoppingListSelected, setShoppingListSelected] = useState<ShoppingList|null>(null);
   const { userId } = route.params;
 
-  const add = (text: string) => {
-    // is text empty?
-    if (text === null || text === "") {
-      return false;
-    }
+  const handleModifyShoppingList = (ShoppingListObj: ShoppingList | CreateShoppingListQuery) => {
     db.transaction(
       tx => {
         const currentDate = new Date().toUTCString();
-        tx.executeSql(`INSERT INTO shopping_lists (shopping_list_name, created_date, updated_date, user_id ) VALUES ('today''s shopping list', '${currentDate}','${currentDate}',${userId});`);
-        tx.executeSql("select * from shopping_lists", [], (_, { rows }) => {
+        if (ShoppingListObj.id != null) {
+          // If already select a shopping list, modify this item in DB
+          tx.executeSql(`UPDATE shopping_lists SET shopping_list_name = '${ShoppingListObj.shopping_list_name}', updated_date = '${currentDate}' WHERE id = '${ShoppingListObj.id}';`, [], error =>
+            console.log(error)
+          );
+        } else {
+          //add new shopping list into the list
+          tx.executeSql(`INSERT INTO shopping_lists (shopping_list_name, created_date, updated_date, user_id ) VALUES ('${ShoppingListObj.shopping_list_name}', '${currentDate}','${currentDate}',${userId});`, [], error =>
+            console.log(error)
+          );
+        }
+        setShoppingListSelected(null);
+        tx.executeSql(`SELECT * FROM shopping_lists WHERE user_id = ${userId}`, [], (_, { rows }) => {
           setTable((rows as any)._array);
         });
-      }
-    );
+      });
+  }
+
+  const unSelectShoppingList = () => {
+    setShoppingListSelected(null);
   }
 
   React.useEffect(() => {
@@ -68,7 +85,7 @@ export function ShoppingListScreen({ route, navigation }: Props) {
   return (
     <ScrollView>
       {
-        table.map((shopping_list: Shopping_list, index: number) => {
+        table.map((shopping_list: ShoppingList, index: number) => {
           return <ShoppingListItem
             shoppingListId ={shopping_list.id}
             shoppingListTitle = {shopping_list.shopping_list_name}
@@ -78,10 +95,7 @@ export function ShoppingListScreen({ route, navigation }: Props) {
            />
         })
       }
-      <Button
-        title="add"
-        onPress={() => { add('pear') }}
-      />
+      <AddShoppingList modifyShoppingList={handleModifyShoppingList} shoppingListSelected={shoppingListSelected} unSelectShoppingList={unSelectShoppingList}/>
     </ScrollView>  
   );
 }

@@ -40,9 +40,6 @@ const styles = StyleSheet.create({
   }
 })
 
-
-
-
 export function ShoppingListDetailsScreen({ route }: Props) {
   const [table, setTable] = useState([]);
   const [itemSelected, setItemSelected] = useState<Item|null>(null);
@@ -67,6 +64,7 @@ export function ShoppingListDetailsScreen({ route }: Props) {
   const unSelectItem = () => {
     setItemSelected(null);
   }
+  
   const handleModifyItem = (itemObj: Item | CreateItemQuery) => {
     db.transaction(
       tx => {

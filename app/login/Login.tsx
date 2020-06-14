@@ -121,18 +121,18 @@ export function LoginScreen({ route, navigation }: Props) {
     db.transaction(tx => {
 
       // Clean up old DB data
-      console.log('drop table')
-      tx.executeSql("PRAGMA foreign_keys = OFF;")
-      tx.executeSql("DROP TABLE IF EXISTS users;");
-      tx.executeSql("DROP TABLE IF EXISTS shopping_lists;");
-      tx.executeSql("DROP TABLE IF EXISTS tags;");
-      tx.executeSql("DROP TABLE IF EXISTS items;",[], 
-        function(error){
-          console.log("item table Could not delete");
-        }
-      );
-      tx.executeSql("DROP TABLE IF EXISTS item_tags;");
-      tx.executeSql("PRAGMA foreign_keys = ON;")
+      // console.log('drop table')
+      // tx.executeSql("PRAGMA foreign_keys = OFF;")
+      // tx.executeSql("DROP TABLE IF EXISTS users;");
+      // tx.executeSql("DROP TABLE IF EXISTS shopping_lists;");
+      // tx.executeSql("DROP TABLE IF EXISTS tags;");
+      // tx.executeSql("DROP TABLE IF EXISTS items;",[], 
+      //   function(error){
+      //     console.log("item table Could not delete");
+      //   }
+      // );
+      // tx.executeSql("DROP TABLE IF EXISTS item_tags;");
+      // tx.executeSql("PRAGMA foreign_keys = ON;")
 
       // Init database and set up default value
       // Create Users table
