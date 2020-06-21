@@ -4,7 +4,6 @@ import { StyleSheet, Text, View, Button } from 'react-native';
 import { NavigationContainer, RouteProp } from '@react-navigation/native';
 import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import { LoginScreen } from './app/login/Login';
-import { HomeScreen } from './app/home/Home';
 import { ShoppingListScreen } from './app/Shopping-list/ShoppingList';
 import { ShoppingListDetailsScreen } from './app/shopping-list-details/ShoppingListDetails';
 
@@ -32,11 +31,6 @@ export default function App() {
           name="ShoppingList"
           component={ShoppingListScreen}
           options={{title: 'Shopping Lists'}}
-        />
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-          options={{title: 'Welcome'}}
         />
         <Stack.Screen
           name="ShoppingListDetails"

@@ -6,7 +6,6 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import SqlDatabase from '../shared-service/Sql-database';
 import { ShoppingListItem } from './components/ShoppingListItem';
 import { AddShoppingList } from './components/AddShoppingList';
-const db = SqlDatabase.getConnection();
 
 type RootStackParamList = {
   Home: undefined;
@@ -41,26 +40,18 @@ export function ShoppingListScreen({ route, navigation }: Props) {
   const [shoppingListSelected, setShoppingListSelected] = useState<ShoppingList|null>(null);
   const { userId } = route.params;
 
-  const handleModifyShoppingList = (ShoppingListObj: ShoppingList | CreateShoppingListQuery) => {
-    db.transaction(
-      tx => {
-        const currentDate = new Date().toUTCString();
-        if (ShoppingListObj.id != null) {
-          // If already select a shopping list, modify this item in DB
-          tx.executeSql(`UPDATE shopping_lists SET shopping_list_name = '${ShoppingListObj.shopping_list_name}', updated_date = '${currentDate}' WHERE id = '${ShoppingListObj.id}';`, [], error =>
-            console.log(error)
-          );
-        } else {
-          //add new shopping list into the list
-          tx.executeSql(`INSERT INTO shopping_lists (shopping_list_name, created_date, updated_date, user_id ) VALUES ('${ShoppingListObj.shopping_list_name}', '${currentDate}','${currentDate}',${userId});`, [], error =>
-            console.log(error)
-          );
-        }
-        setShoppingListSelected(null);
-        tx.executeSql(`SELECT * FROM shopping_lists WHERE user_id = ${userId}`, [], (_, { rows }) => {
-          setTable((rows as any)._array);
-        });
-      });
+  const handleModifyShoppingList = async (ShoppingListObj: ShoppingList | CreateShoppingListQuery) => {
+
+    if (ShoppingListObj.id != null) {
+      // If already select a shopping list, modify this item in DB
+      await SqlDatabase.updateShoppingList(ShoppingListObj as ShoppingList);
+    } else {
+      //add new shopping list into the list
+      await SqlDatabase.createShoppingList(ShoppingListObj as CreateShoppingListQuery, userId)
+    }
+    setShoppingListSelected(null);
+    const shoppingListData = await SqlDatabase.checkShoppingLists(userId) as any;
+    setTable((shoppingListData as any)._array);
   }
 
   const unSelectShoppingList = () => {
@@ -68,19 +59,11 @@ export function ShoppingListScreen({ route, navigation }: Props) {
   }
 
   React.useEffect(() => {
-    db.transaction(tx => {
-      tx.executeSql("SELECT id FROM shopping_lists WHERE id=1;", [], (_, { rows }) => {
-        if (rows.length == 0) {
-          console.log('add default shopping list')
-          // create default shoppinglist
-          const currentDate = new Date().toUTCString();
-          tx.executeSql(`INSERT INTO shopping_lists (shopping_list_name, created_date, updated_date, user_id ) VALUES ('today''s shopping list', '${currentDate}','${currentDate}',${userId});`);
-        }
-        tx.executeSql("select * from shopping_lists", [], (_, { rows }) => {
-          setTable((rows as any)._array);
-        })
-      })
-    });
+    const runEffect = async () => {
+      const shoppingListData = await SqlDatabase.checkShoppingLists(userId) as any;
+      setTable((shoppingListData as any)._array);
+    };
+    runEffect();
   }, []);
   return (
     <ScrollView>

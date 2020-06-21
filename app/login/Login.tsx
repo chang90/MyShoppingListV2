@@ -4,7 +4,6 @@ import { StyleSheet, Text, View, Button, TouchableOpacity, TextInput, Image, Swi
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import SqlDatabase from '../shared-service/Sql-database';
-const db = SqlDatabase.getConnection();
 
 type RootStackParamList = {
   Home: object;
@@ -118,53 +117,7 @@ export function LoginScreen({ route, navigation }: Props) {
     navigation.navigate("ShoppingList", { userId: 1 })
   };
   React.useEffect(() => {
-    db.transaction(tx => {
-
-      // Clean up old DB data
-      // console.log('drop table')
-      // tx.executeSql("PRAGMA foreign_keys = OFF;")
-      // tx.executeSql("DROP TABLE IF EXISTS users;");
-      // tx.executeSql("DROP TABLE IF EXISTS shopping_lists;");
-      // tx.executeSql("DROP TABLE IF EXISTS tags;");
-      // tx.executeSql("DROP TABLE IF EXISTS items;",[], 
-      //   function(error){
-      //     console.log("item table Could not delete");
-      //   }
-      // );
-      // tx.executeSql("DROP TABLE IF EXISTS item_tags;");
-      // tx.executeSql("PRAGMA foreign_keys = ON;")
-
-      // Init database and set up default value
-      // Create Users table
-      tx.executeSql(
-        "create table if not exists users (id integer primary key not null, user_name text, created_date text, updated_date text, password text, connect_to_cloud boolean);");
-
-      // Create Shopping Lists table
-      tx.executeSql(
-        "create table if not exists shopping_lists (id integer primary key not null, shopping_list_name text, created_date text, updated_date text, completed_date text, user_id integer);");
-
-      // Create Tags table
-      tx.executeSql(
-        "create table if not exists tags (id integer primary key not null, tag_name text, created_date text, updated_date text, default_tag boolean, color string);");
-
-      // Create Items table
-      tx.executeSql(
-        "create table if not exists items (id integer primary key not null, item_name text, created_date text, updated_date text, expiry_date text, notes text, status number not null, shoppinglist_id integer not null);");
-
-      // Create Item Tag matching table
-      tx.executeSql(
-        "create table if not exists item_tags (id INTEGER PRIMARY KEY NOT NULL, item_id INTEGER REFERENCES items(id), tag_id INTEGER REFERENCES tags(id));");
-
-      tx.executeSql("select * from users where id = 1", [], (_, { rows }) => {
-        console.log('users', rows)
-        if (rows.length == 0) {
-          // create default user
-          const currentDate = new Date().toUTCString();
-          tx.executeSql(`insert into users (user_name, created_date, updated_date, connect_to_cloud) values ('default', '${currentDate}','${currentDate}',0);`);
-        }
-      })
-      
-    });
+    SqlDatabase.initData();
   }, []);
   return (
     <View style={styles.background}>
@@ -197,7 +150,7 @@ export function LoginScreen({ route, navigation }: Props) {
               value={autoLogin} />
           </View>
           <View style={styles.gap}></View>
-          <Button color='#009688' onPress={() => navigation.navigate('Home')} title="Sign In" />
+          <Button color='#009688' onPress={closeWindow} title="Sign In" />
           <TouchableOpacity style={styles.signUp}>
             <Text>Don't have an account?Sign Up Here!</Text>
           </TouchableOpacity>
