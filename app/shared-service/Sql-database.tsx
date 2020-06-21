@@ -41,8 +41,8 @@ const SqlDatabase = {
         console.log('shopping_lists', rows)
       })
       tx.executeSql("select * from users where id = 1", [], (_, { rows }) => {
-        console.log('user', rows)
         if (rows.length == 0) {
+          console.log('create default account with data')
           // Create default user
           const currentDate = new Date().toUTCString();
           tx.executeSql(`insert into users (user_name, created_date, updated_date, connect_to_cloud) values ('default', '${currentDate}','${currentDate}',0);`);
@@ -50,15 +50,16 @@ const SqlDatabase = {
           // Create default shopping list
           tx.executeSql(`insert into shopping_lists (shopping_list_name, created_date, updated_date, user_id) values ('${new Date().toISOString().slice(0, 10)} Shopping list', '${currentDate}','${currentDate}',1);`);
 
-          // // Create default tags
+          // Create default tags
           // tx.executeSql(`insert into tags (tag_name, created_date, updated_date, default_tag, color) values ('easy to expire', '${currentDate}','${currentDate}', true, '#fcc68f';`);
 
           // tx.executeSql(`insert into tags (tag_name, created_date, updated_date, default_tag, color) values ('fridge', '${currentDate}','${currentDate}', true, '#a7dfde';`);
 
-          // // Create default Item
-          // tx.executeSql(`insert into items (item_name, created_date, updated_date, status, shoppinglist_id) values ('I am your new fresh item', '${currentDate}','${currentDate}', 1, 1;`);
-
-          // // Create Item Tag matching for item
+          // Create default Item
+          // tx.executeSql(`insert into items (item_name, created_date, updated_date, notes, status, shoppinglist_id) values ('I am your new fresh item', '${currentDate}','${currentDate}', '', 1, 1;`, [], error =>
+          //   console.log(error)
+          // );
+          // Create Item Tag matching for item
           // tx.executeSql(`insert into item_tags (item_id, tag_id) values (1, 1);`);
           // tx.executeSql(`insert into item_tags (item_id, tag_id) values (1, 2);`);
         }
