@@ -116,6 +116,25 @@ export function LoginScreen({ route, navigation }: Props) {
   const closeWindow = () => {
     navigation.navigate("ShoppingList", { userId: 1 })
   };
+  const deleteAll = async () => {
+    console.log('delete')
+    try {
+      await SqlDatabase.deleteAllShoppingLists();
+      await SqlDatabase.deleteAllUsers();
+      await SqlDatabase.deleteAllItems();
+      await SqlDatabase.deleteAllItemsTags();
+      await SqlDatabase.deleteAllTags();
+
+      await SqlDatabase.dropTables('item_tags');
+      await SqlDatabase.dropTables('tags');
+      await SqlDatabase.dropTables('items');
+      await SqlDatabase.dropTables('shopping_lists');
+      await SqlDatabase.dropTables('users');
+    } catch (error) {
+      console.log(error);
+    }
+    
+  }
   React.useEffect(() => {
     SqlDatabase.initData();
   }, []);
@@ -151,10 +170,12 @@ export function LoginScreen({ route, navigation }: Props) {
           </View>
           <View style={styles.gap}></View>
           <Button color='#009688' onPress={closeWindow} title="Sign In" />
+          <Button color='#009688' onPress={deleteAll} title="Delete" />
           <TouchableOpacity style={styles.signUp}>
             <Text>Don't have an account?Sign Up Here!</Text>
           </TouchableOpacity>
           <Text style={styles.resetText}>Reset your password</Text>
+          
         </View>
       </View>
     </View>
