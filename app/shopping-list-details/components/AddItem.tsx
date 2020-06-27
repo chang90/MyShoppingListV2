@@ -16,7 +16,18 @@ type Props = {
   itemSelected?: Item | null
 };
 
-const styles = StyleSheet.create({
+type Tag = {
+  id: number, 
+  tagName: string,
+  createdDate: string,
+  updatedDate: string,
+  default_tag: true,
+  color: string
+};
+
+type Styles = {[key: string]: Object};
+
+const styles = StyleSheet.create<Styles>({
   buttonContainer: {
     flex: 1
   },
@@ -102,8 +113,10 @@ const styles = StyleSheet.create({
   },
   colorTag: {
     backgroundColor: "#ccc",
-    margin: 3,
-    padding: 3
+    margin: 5,
+    paddingVertical: 5,
+    paddingHorizontal: 15,
+    borderRadius: 3
   },
   tagGroup: {
     display: "flex",
@@ -115,6 +128,7 @@ export function AddItem({ itemSelected, modifyItem, unSelectItem }: Props) {
   const [modalVisible, setModalVisible] = useState(false);
   const [itemName, setItemName] = useState('');
   const [itemNote, setItemNote] = useState('');
+  const [tagLists, setTagLists] = useState([] as Tag[]);
 
   const addOrEditItem = () => {
     // is text empty?
@@ -139,6 +153,30 @@ export function AddItem({ itemSelected, modifyItem, unSelectItem }: Props) {
 
   React.useEffect(() => {
     if(itemSelected) {
+      // get tag lists from DB
+      const taglists: Tag[] = [
+        {
+          id: 1, 
+          tagName: 'Easy to expire',
+          createdDate: '2020',
+          updatedDate: '2019',
+          default_tag: true,
+          color: '#f2e8c1'
+        },
+        {
+          id: 2, 
+          tagName: 'Fridge',
+          createdDate: '2020',
+          updatedDate: '2019',
+          default_tag: true,
+          color: 'red'
+        }
+      ]
+      taglists.forEach((tag)=>{
+        styles['tagCss'+tag.id] = { color: tag.color };
+      })
+      setTagLists(taglists);
+
       setModalVisible(true);
       setItemName(itemSelected?.item_name);
       setItemNote(itemSelected?.notes);
@@ -183,14 +221,15 @@ export function AddItem({ itemSelected, modifyItem, unSelectItem }: Props) {
               <Text>item tag (Limit to 3)</Text>
               <View style={styles.tagGroup}>
                 <View style={styles.colorTag}>
-                  <Text>Easy to expire</Text>
+                  <Text>+</Text>
                 </View>
-                <View style={styles.colorTag}>
-                  <Text>Fridge</Text>
-                </View>
-                <View style={styles.colorTag}>
-                  <Text>meat</Text>
-                </View>
+                {
+                  tagLists.map((tag: Tag, index: number) => {
+                    return <View key={index} style={[styles.colorTag, {backgroundColor: tag.color as string}]}>
+                      <Text>{tag.tagName}</Text>
+                    </View>
+                  })
+                }
               </View>
               <Text>notes</Text>
               <TextInput

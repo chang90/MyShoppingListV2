@@ -37,9 +37,6 @@ const SqlDatabase = {
       tx.executeSql(
         "create table if not exists item_tags (id INTEGER PRIMARY KEY NOT NULL, item_id INTEGER REFERENCES items(id), tag_id INTEGER REFERENCES tags(id));");
 
-      tx.executeSql("select * from shopping_lists", [], (_, { rows }) => {
-        console.log('shopping_lists', rows)
-      })
       tx.executeSql("select * from users where id = 1", [], (_, { rows }) => {
         if (rows.length == 0) {
           console.log('create default account with data')
