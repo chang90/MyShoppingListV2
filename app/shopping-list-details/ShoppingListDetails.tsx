@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { useState } from 'react';
-import { StyleSheet, ScrollView, View, Text } from 'react-native';
+import { StyleSheet, ScrollView, View } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import SqlDatabase from '../shared-service/Sql-database';
 import { ToDoItem } from './components/ToDoItem';
