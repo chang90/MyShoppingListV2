@@ -2,6 +2,7 @@
 import React from 'react';
 import * as SQLite from 'expo-sqlite';
 import { ShoppingList, CreateShoppingListQuery } from '../Shopping-list/ShoppingList';
+import { CreateItemQuery, Item } from '../shopping-list-details/ShoppingListDetails';
 
 
 var database_name = "ShoppingList.db";
@@ -170,12 +171,100 @@ const SqlDatabase = {
 
     });
   },
+  checkItemsList: (shoppinglistId: string): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      const db = SqlDatabase.getConnection();
+      try {
+        db.transaction((tx) => {
+          tx.executeSql(
+            `select * from items where shoppinglist_id = ${shoppinglistId}`,
+            [],
+            (_, { rows }) => { resolve(rows) }
+          );
+        });
+      } catch (error) {
+        SqlDatabase.onError(error);
+        reject(error);
+      }
+
+    });
+  },
+  createNewItem: (itemObj: CreateItemQuery, shoppinglistId: string): Promise<any> =>{
+    return new Promise((resolve, reject) => {
+      const db = SqlDatabase.getConnection();
+      try {
+        db.transaction((tx) => {
+          const currentDate = new Date().toUTCString();
+          tx.executeSql(`insert into items (item_name, created_date, updated_date, notes, status, shoppinglist_id) values ('${itemObj.item_name}', '${currentDate}', '${currentDate}', '${itemObj.notes}', ${1}, ${shoppinglistId})`,
+            [],
+            (_, { rows }) => { resolve(rows) }
+          );
+        });
+      } catch (error) {
+        SqlDatabase.onError(error);
+        reject(error);
+      }
+
+    });
+  },
+  updateItem: (itemObj: Item): Promise<any> =>{
+    return new Promise((resolve, reject) => {
+      const db = SqlDatabase.getConnection();
+      try {
+        db.transaction((tx) => {
+          const currentDate = new Date().toUTCString();
+          tx.executeSql(`UPDATE items SET item_name = '${itemObj.item_name}', updated_date = '${currentDate}', notes = '${itemObj.notes}' WHERE id = '${itemObj.id}';`,
+            [],
+            (_, { rows }) => { resolve(rows) }
+          );
+        });
+      } catch (error) {
+        SqlDatabase.onError(error);
+        reject(error);
+      }
+
+    });
+  },
+  deleteItem: (itemId: string): Promise<any> =>{
+    return new Promise((resolve, reject) => {
+      const db = SqlDatabase.getConnection();
+      try {
+        db.transaction((tx) => {
+          tx.executeSql(`DELETE FROM items WHERE id = ${itemId};`,
+            [],
+            (_, { rows }) => { resolve(rows) }
+          );
+        });
+      } catch (error) {
+        SqlDatabase.onError(error);
+        reject(error);
+      }
+
+    });
+  },
   deleteAllItemsTags: (): Promise<any> => {
     return new Promise((resolve, reject) => {
       const db = SqlDatabase.getConnection();
       try {
         db.transaction((tx) => {
           tx.executeSql(`DELETE FROM item_tags;`,
+            [],
+            (_, { rows }) => { resolve(rows) }
+          );
+        });
+      } catch (error) {
+        SqlDatabase.onError(error);
+        reject(error);
+      }
+
+    });
+  },
+  deleteItemsTagsRelationshipByItemId:  (itemId: string): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      const db = SqlDatabase.getConnection();
+      try {
+        db.transaction((tx) => {
+          tx.executeSql(`DELETE FROM item_tags WHERE item_id = ${itemId};`,
             [],
             (_, { rows }) => { resolve(rows) }
           );
