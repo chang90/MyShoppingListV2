@@ -172,9 +172,7 @@ export function AddItem({ itemSelected, modifyItem, unSelectItem }: Props) {
           color: 'red'
         }
       ]
-      taglists.forEach((tag)=>{
-        styles['tagCss'+tag.id] = { color: tag.color };
-      })
+
       setTagLists(taglists);
 
       setModalVisible(true);
