@@ -9,6 +9,7 @@ import {
   TextInput
 } from "react-native";
 import { CreateItemQuery, Item } from "../ShoppingListDetails";
+import SqlDatabase from "../../shared-service/Sql-database";
 
 type Props = {
   modifyItem: Function,
@@ -152,33 +153,20 @@ export function AddItem({ itemSelected, modifyItem, unSelectItem }: Props) {
   }
 
   React.useEffect(() => {
+    const runEffect = async () => {
+      const tagListData = await SqlDatabase.checkTagList();
+      setTagLists((tagListData as any)._array);
+    };
+    runEffect();
+  }, []);
+
+  React.useEffect(() => {
     if(itemSelected) {
-      // get tag lists from DB
-      const taglists: Tag[] = [
-        {
-          id: 1, 
-          tagName: 'Easy to expire',
-          createdDate: '2020',
-          updatedDate: '2019',
-          default_tag: true,
-          color: '#f2e8c1'
-        },
-        {
-          id: 2, 
-          tagName: 'Fridge',
-          createdDate: '2020',
-          updatedDate: '2019',
-          default_tag: true,
-          color: 'red'
-        }
-      ]
-
-      setTagLists(taglists);
-
       setModalVisible(true);
       setItemName(itemSelected?.item_name);
       setItemNote(itemSelected?.notes);
     } else {
+      setModalVisible(false);
       setItemName('');
       setItemNote('');
     }

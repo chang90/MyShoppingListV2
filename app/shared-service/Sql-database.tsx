@@ -49,9 +49,9 @@ const SqlDatabase = {
           tx.executeSql(`insert into shopping_lists (shopping_list_name, created_date, updated_date, user_id) values ('${new Date().toISOString().slice(0, 10)} Shopping list', '${currentDate}','${currentDate}',1);`);
 
           // Create default tags
-          // tx.executeSql(`insert into tags (tag_name, created_date, updated_date, default_tag, color) values ('easy to expire', '${currentDate}','${currentDate}', true, '#fcc68f';`);
+          tx.executeSql(`insert into tags (tag_name, created_date, updated_date, default_tag, color) values ('easy to expire', '${currentDate}', '${currentDate}', 1, '#fcc68f'); `);
 
-          // tx.executeSql(`insert into tags (tag_name, created_date, updated_date, default_tag, color) values ('fridge', '${currentDate}','${currentDate}', true, '#a7dfde';`);
+          tx.executeSql(`insert into tags (tag_name, created_date, updated_date, default_tag, color) values ('fridge', '${currentDate}','${currentDate}', 1, '#a7dfde');`);
 
           // Create default Item
           // tx.executeSql(`insert into items (item_name, created_date, updated_date, notes, status, shoppinglist_id) values ('I am your new fresh item', '${currentDate}','${currentDate}', '', 1, 1;`, [], error =>
@@ -282,6 +282,24 @@ const SqlDatabase = {
       try {
         db.transaction((tx) => {
           tx.executeSql(`DELETE FROM tags;`,
+            [],
+            (_, { rows }) => { resolve(rows) }
+          );
+        });
+      } catch (error) {
+        SqlDatabase.onError(error);
+        reject(error);
+      }
+
+    });
+  },
+  checkTagList: (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      const db = SqlDatabase.getConnection();
+      try {
+        db.transaction((tx) => {
+          tx.executeSql(
+            `select tag_name as tagName, created_date as createdDate, updated_date as updatedDate, default_tag as defaultTag, color from tags;`,
             [],
             (_, { rows }) => { resolve(rows) }
           );
