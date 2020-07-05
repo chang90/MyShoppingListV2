@@ -299,7 +299,7 @@ const SqlDatabase = {
       try {
         db.transaction((tx) => {
           tx.executeSql(
-            `select tag_name as tagName, created_date as createdDate, updated_date as updatedDate, default_tag as defaultTag, color from tags;`,
+            `select id, tag_name as tagName, created_date as createdDate, updated_date as updatedDate, default_tag as defaultTag, color from tags;`,
             [],
             (_, { rows }) => { resolve(rows) }
           );
