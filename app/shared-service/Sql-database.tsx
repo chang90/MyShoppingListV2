@@ -54,9 +54,9 @@ const SqlDatabase = {
           tx.executeSql(`insert into tags (tag_name, created_date, updated_date, default_tag, color) values ('fridge', '${currentDate}','${currentDate}', 1, '#a7dfde');`);
 
           // Create default Item
-          // tx.executeSql(`insert into items (item_name, created_date, updated_date, notes, status, shoppinglist_id) values ('I am your new fresh item', '${currentDate}','${currentDate}', '', 1, 1;`, [], error =>
-          //   console.log(error)
-          // );
+          tx.executeSql(`insert into items (item_name, created_date, updated_date, notes, status, shoppinglist_id) values ('I am your new fresh item', '${currentDate}','${currentDate}', '', 1, 1);`, [], error =>
+            console.log(error)
+          );
           // Create Item Tag matching for item
           // tx.executeSql(`insert into item_tags (item_id, tag_id) values (1, 1);`);
           // tx.executeSql(`insert into item_tags (item_id, tag_id) values (1, 2);`);
