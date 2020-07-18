@@ -177,7 +177,7 @@ const SqlDatabase = {
       try {
         db.transaction((tx) => {
           tx.executeSql(
-            `select * from items LEFT JOIN item_tags on items.id = item_tags.item_id LEFT JOIN tags ON item_tags.tag_id = tags.id where shoppinglist_id = ${shoppinglistId}`,
+            `select items.id, items.item_name, items.notes, items.status, items.created_date, items.expiry_date, items.updated_date, GROUP_CONCAT(item_tags.tag_id) AS tag_id_array from items LEFT JOIN item_tags on items.id = item_tags.item_id where shoppinglist_id = ${shoppinglistId} GROUP BY items.id`,
             [],
             (_, { rows }) => { resolve(rows) }
           );
