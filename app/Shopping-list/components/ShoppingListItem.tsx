@@ -60,7 +60,7 @@ export function ShoppingListItem({ shoppingListTitle, shoppingListId, navigation
         style={styles.shoppingListTitle}
         onPress={() => navigation.navigate('ShoppingListDetails', { shoppinglist_id: shoppingListId })}
       >
-        <Text>></Text>
+        <Text>&gt;</Text>
       </TouchableOpacity>
     </View>
   );

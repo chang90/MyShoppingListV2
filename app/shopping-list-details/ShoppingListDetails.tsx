@@ -82,6 +82,7 @@ export function ShoppingListDetailsScreen({ route }: Props) {
   React.useEffect(() => {
     const runEffect = async () => {
       const itemListData = await SqlDatabase.checkItemsList(shoppinglist_id);
+      console.log(itemListData)
       setTable((itemListData as any)._array);
     };
     runEffect();

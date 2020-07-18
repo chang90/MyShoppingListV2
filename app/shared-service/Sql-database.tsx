@@ -58,8 +58,8 @@ const SqlDatabase = {
             console.log(error)
           );
           // Create Item Tag matching for item
-          // tx.executeSql(`insert into item_tags (item_id, tag_id) values (1, 1);`);
-          // tx.executeSql(`insert into item_tags (item_id, tag_id) values (1, 2);`);
+          tx.executeSql(`insert into item_tags (item_id, tag_id) values (1, 1);`);
+          tx.executeSql(`insert into item_tags (item_id, tag_id) values (1, 2);`);
         }
       })
 
@@ -177,7 +177,7 @@ const SqlDatabase = {
       try {
         db.transaction((tx) => {
           tx.executeSql(
-            `select * from items where shoppinglist_id = ${shoppinglistId}`,
+            `select * from items LEFT JOIN item_tags on items.id = item_tags.item_id LEFT JOIN tags ON item_tags.tag_id = tags.id where shoppinglist_id = ${shoppinglistId}`,
             [],
             (_, { rows }) => { resolve(rows) }
           );
