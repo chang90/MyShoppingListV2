@@ -130,6 +130,7 @@ export function AddItem({ itemSelected, modifyItem, unSelectItem }: Props) {
   const [itemName, setItemName] = useState('');
   const [itemNote, setItemNote] = useState('');
   const [tagLists, setTagLists] = useState([] as Tag[]);
+  const [itemTagsArr, setItemTagsArr] = useState('');
 
   const addOrEditItem = () => {
     // is text empty?
@@ -164,6 +165,7 @@ export function AddItem({ itemSelected, modifyItem, unSelectItem }: Props) {
     if(itemSelected) {
       setModalVisible(true);
       setItemName(itemSelected?.item_name);
+      setItemTagsArr(itemSelected?.tag_id_array)
       setItemNote(itemSelected?.notes);
     } else {
       setModalVisible(false);
@@ -204,6 +206,7 @@ export function AddItem({ itemSelected, modifyItem, unSelectItem }: Props) {
                 onChangeText={text => setItemName(text)}
                 value={itemName}
               />
+              <Text>{itemTagsArr}</Text>
               <Text>item tag (Limit to 3)</Text>
               <View style={styles.tagGroup}>
                 <View style={styles.colorTag}>
