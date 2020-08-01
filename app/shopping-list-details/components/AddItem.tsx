@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { CreateItemQuery, Item } from "../ShoppingListDetails";
 import SqlDatabase from "../../shared-service/Sql-database";
+import { TagsContainer } from "./TagsContainer";
 
 type Props = {
   modifyItem: Function,
@@ -17,7 +18,7 @@ type Props = {
   itemSelected?: Item | null
 };
 
-type Tag = {
+export type Tag = {
   id: number, 
   tagName: string,
   createdDate: string,
@@ -206,20 +207,7 @@ export function AddItem({ itemSelected, modifyItem, unSelectItem }: Props) {
                 onChangeText={text => setItemName(text)}
                 value={itemName}
               />
-              <Text>{itemTagsArr}</Text>
-              <Text>item tag (Limit to 3)</Text>
-              <View style={styles.tagGroup}>
-                <View style={styles.colorTag}>
-                  <Text>+</Text>
-                </View>
-                {
-                  tagLists.map((tag: Tag, index: number) => {
-                    return <View key={index} style={[styles.colorTag, {backgroundColor: tag.color as string}]}>
-                      <Text>{tag.tagName}</Text>
-                    </View>
-                  })
-                }
-              </View>
+              <TagsContainer itemTagsArr={itemTagsArr} tagLists={tagLists} />
               <Text>notes</Text>
               <TextInput
                 style={styles.inputBox}
