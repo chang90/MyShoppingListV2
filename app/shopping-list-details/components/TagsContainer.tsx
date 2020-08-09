@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { Item } from "../ShoppingListDetails";
 import { Tag } from "./AddItem";
 import { StyleSheet, View, Text } from "react-native";
 
 type Props = {
-  itemTagsArr: string,
+  itemTagsArr: Array<string>,
   tagLists: Tag[]
 };
 
@@ -23,6 +22,17 @@ const styles = StyleSheet.create({
 });
 
 export function TagsContainer({ itemTagsArr, tagLists }: Props) {
+  const [displayTagList, setDisplayTagList] = useState([] as Tag[]);
+  React.useEffect(() => {
+    if(itemTagsArr && tagLists) {
+      const displayTagList: Tag[] = tagLists.map((tag: Tag) => {
+        return Object.assign({}, tag, { color: itemTagsArr.includes(tag?.id.toString()) ? tag.color : '#ccc'});
+      })
+      setDisplayTagList(displayTagList);
+    }
+    
+  }, [itemTagsArr,tagLists]);
+
   return (
     <View>
       <Text>{itemTagsArr}</Text>
@@ -32,7 +42,7 @@ export function TagsContainer({ itemTagsArr, tagLists }: Props) {
           <Text>+</Text>
         </View>
         {
-          tagLists.map((tag: Tag, index: number) => {
+          displayTagList.map((tag: Tag, index: number) => {
             return <View key={index} style={[styles.colorTag, { backgroundColor: tag.color as string }]}>
               <Text>{tag.tagName}</Text>
             </View>

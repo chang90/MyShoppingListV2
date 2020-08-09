@@ -131,7 +131,7 @@ export function AddItem({ itemSelected, modifyItem, unSelectItem }: Props) {
   const [itemName, setItemName] = useState('');
   const [itemNote, setItemNote] = useState('');
   const [tagLists, setTagLists] = useState([] as Tag[]);
-  const [itemTagsArr, setItemTagsArr] = useState('');
+  const [itemTagsArr, setItemTagsArr] = useState([] as Array<string>);
 
   const addOrEditItem = () => {
     // is text empty?
@@ -166,7 +166,7 @@ export function AddItem({ itemSelected, modifyItem, unSelectItem }: Props) {
     if(itemSelected) {
       setModalVisible(true);
       setItemName(itemSelected?.item_name);
-      setItemTagsArr(itemSelected?.tag_id_array)
+      setItemTagsArr(itemSelected?.tag_id_array.split(","));
       setItemNote(itemSelected?.notes);
     } else {
       setModalVisible(false);

@@ -53,6 +53,8 @@ const SqlDatabase = {
 
           tx.executeSql(`insert into tags (tag_name, created_date, updated_date, default_tag, color) values ('fridge', '${currentDate}','${currentDate}', 1, '#a7dfde');`);
 
+          tx.executeSql(`insert into tags (tag_name, created_date, updated_date, default_tag, color) values ('fast food', '${currentDate}','${currentDate}', 1, '#45a29e');`);
+
           // Create default Item
           tx.executeSql(`insert into items (item_name, created_date, updated_date, notes, status, shoppinglist_id) values ('I am your new fresh item', '${currentDate}','${currentDate}', '', 1, 1);`, [], error =>
             console.log(error)
