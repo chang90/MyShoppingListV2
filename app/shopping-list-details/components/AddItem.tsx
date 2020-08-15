@@ -222,8 +222,6 @@ export function AddItem({ itemSelected, modifyItem, unSelectItem }: Props) {
                 <Text style={styles.submitButtonText}>{itemSelected ? 'Edit': 'Add'}</Text>
               </TouchableHighlight>
             </View>
-
-
           </View>
         </View>
       </Modal>
