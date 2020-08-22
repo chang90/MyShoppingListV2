@@ -28,7 +28,7 @@ const SqlDatabase = {
 
       // Create Tags table
       tx.executeSql(
-        "create table if not exists tags (id integer primary key not null, tag_name text, created_date text, updated_date text, default_tag boolean, color string);");
+        "create table if not exists tags (id integer primary key not null, tag_name text NOT NULL UNIQUE, created_date text, updated_date text, default_tag boolean, color string);");
 
       // Create Items table
       tx.executeSql(
@@ -302,6 +302,68 @@ const SqlDatabase = {
         db.transaction((tx) => {
           tx.executeSql(
             `select id, tag_name as tagName, created_date as createdDate, updated_date as updatedDate, default_tag as defaultTag, color from tags;`,
+            [],
+            (_, { rows }) => { resolve(rows) }
+          );
+        });
+      } catch (error) {
+        SqlDatabase.onError(error);
+        reject(error);
+      }
+
+    });
+  },
+  getTagByName: (tagName:string): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      const db = SqlDatabase.getConnection();
+      try {
+        db.transaction((tx) => {
+          tx.executeSql(
+            `select id, tag_name as tagName, created_date as createdDate, updated_date as updatedDate, default_tag as defaultTag, color from tags WHERE tag_name = ${tagName} ORDER BY id ASC;`,
+            [],
+            (_, { rows }) => {
+              if((rows as any)?.length > 0) {
+                resolve((rows as any)?._array[0]);
+              } else {
+                resolve(null);
+              }
+              
+             }
+          );
+        });
+      } catch (error) {
+        SqlDatabase.onError(error);
+        reject(error);
+      }
+
+    });
+  },
+  createNewTag: (tagName: string, colorCode: string): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      const db = SqlDatabase.getConnection();
+      const currentDate = new Date().toUTCString();
+      try {
+        db.transaction((tx) => {
+          tx.executeSql(
+            `insert into tags (tag_name, created_date, updated_date, default_tag, color) values ('${tagName}', '${currentDate}', '${currentDate}', 0, '${colorCode}'); `,
+            [],
+            (_, { rows }) => { resolve(rows) }
+          );
+        });
+      } catch (error) {
+        SqlDatabase.onError(error);
+        reject(error);
+      }
+
+    });
+  },
+  activeTag: (tagId:number, itemId:number): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      const db = SqlDatabase.getConnection();
+      try {
+        db.transaction((tx) => {
+          tx.executeSql(
+            `insert into item_tags (item_id, tag_id) values (${itemId}, ${tagId}); `,
             [],
             (_, { rows }) => { resolve(rows) }
           );

@@ -154,6 +154,26 @@ export function AddItem({ itemSelected, modifyItem, unSelectItem }: Props) {
     setItemNote('');
   }
 
+  const addNewTag = async (newTagName: string) => {
+    // If this tag name is not inside database, create a new tag in tag table
+    let existingTag = await SqlDatabase.getTagByName(newTagName);
+    
+    if(!existingTag) {
+      const randomColor: string = '#' + Math.floor(Math.random()*16777215).toString(16);
+      await SqlDatabase.createNewTag(newTagName, randomColor);
+      existingTag = await SqlDatabase.getTagByName(newTagName);
+    }
+    const tagId:number = (existingTag as any)?.id;
+    if(tagId) {
+      SqlDatabase.activeTag(tagId,(itemSelected as Item).id);
+      const tagListData = await SqlDatabase.checkTagList();
+      setTagLists((tagListData as any)._array);
+
+      setItemTagsArr([...itemTagsArr, tagId+'']);
+    }
+    
+  }
+
   React.useEffect(() => {
     const runEffect = async () => {
       const tagListData = await SqlDatabase.checkTagList();
@@ -207,7 +227,7 @@ export function AddItem({ itemSelected, modifyItem, unSelectItem }: Props) {
                 onChangeText={text => setItemName(text)}
                 value={itemName}
               />
-              <TagsContainer itemTagsArr={itemTagsArr} tagLists={tagLists} />
+              <TagsContainer itemTagsArr={itemTagsArr} tagLists={tagLists} addNewTag={addNewTag}/>
               <Text>notes</Text>
               <TextInput
                 style={styles.inputBox}

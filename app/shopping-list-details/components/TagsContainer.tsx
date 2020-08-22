@@ -4,7 +4,8 @@ import { StyleSheet, View, Text, TextInput } from "react-native";
 
 type Props = {
   itemTagsArr: Array<string>,
-  tagLists: Tag[]
+  tagLists: Tag[],
+  addNewTag: Function
 };
 
 const styles = StyleSheet.create({
@@ -20,6 +21,7 @@ const styles = StyleSheet.create({
   },
   tagGroup: {
     display: "flex",
+    flexWrap: "wrap",
     flexDirection: "row",
   },
   hideElement: {
@@ -27,9 +29,13 @@ const styles = StyleSheet.create({
   }
 });
 
-export function TagsContainer({ itemTagsArr, tagLists }: Props) {
+export function TagsContainer({ itemTagsArr, tagLists, addNewTag }: Props) {
   const [displayTagList, setDisplayTagList] = useState([] as Tag[]);
   const [newTagName, setNewTagName] = useState('');
+  const addTagToTagList = () => {
+    addNewTag(newTagName);
+    setNewTagName('');
+  }
 
   React.useEffect(() => {
     if (itemTagsArr && tagLists) {
@@ -54,7 +60,7 @@ export function TagsContainer({ itemTagsArr, tagLists }: Props) {
             value={newTagName}
             placeholder="+"
             placeholderTextColor={'#aaa'}
-            onSubmitEditing={()=>console.log('submit')}
+            onSubmitEditing={()=>addTagToTagList()}
           >
           </TextInput>
         </View>
