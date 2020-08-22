@@ -319,7 +319,7 @@ const SqlDatabase = {
       try {
         db.transaction((tx) => {
           tx.executeSql(
-            `select id, tag_name as tagName, created_date as createdDate, updated_date as updatedDate, default_tag as defaultTag, color from tags WHERE tag_name = ${tagName} ORDER BY id ASC;`,
+            `select id, tag_name as tagName, created_date as createdDate, updated_date as updatedDate, default_tag as defaultTag, color from tags WHERE tag_name = '${tagName}' ORDER BY id ASC;`,
             [],
             (_, { rows }) => {
               if((rows as any)?.length > 0) {
