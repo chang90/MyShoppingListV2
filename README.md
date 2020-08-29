@@ -15,8 +15,8 @@ MVP is not ready.
 
 ### Prerequisites
 1. git
-2. npm 6.14.4
-3. node v13.12.0
+2. npm 6.14.6
+3. node v12.18.3
 4. react-native-cli
 5. expo-cli
 
