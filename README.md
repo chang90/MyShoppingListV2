@@ -1,5 +1,5 @@
 # ![alt text](https://github.com/hiby90hou/MyShoppingList/blob/master/graphic%20design/logo_v1/mipmap-hdpi/ic_launcher.png "MyShoppingList Logo") MyShoppingList V2
-## An React-native apk project
+## An React-native project
 
 MyShoppingList is an android app project which can help people to reduce food waste and help them to save money on food shopping.
 
