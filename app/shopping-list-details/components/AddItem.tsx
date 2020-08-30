@@ -188,6 +188,8 @@ export function AddItem({ itemSelected, modifyItem, unSelectItem }: Props) {
       setItemName(itemSelected?.item_name);
       if(itemSelected?.tag_id_array?.length > 0) {
         setItemTagsArr(itemSelected?.tag_id_array.split(","));
+      } else {
+        setItemTagsArr([]);
       }
       
       setItemNote(itemSelected?.notes);
