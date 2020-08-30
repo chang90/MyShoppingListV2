@@ -49,7 +49,6 @@ export function TagsContainer({ itemTagsArr, tagLists, addNewTag }: Props) {
 
   return (
     <View>
-      <Text>{itemTagsArr}</Text>
       <Text>item tag (Limit to 3)</Text>
       <View style={styles.tagGroup}>
         <View style={styles.colorTag}>

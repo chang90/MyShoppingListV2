@@ -186,7 +186,10 @@ export function AddItem({ itemSelected, modifyItem, unSelectItem }: Props) {
     if(itemSelected) {
       setModalVisible(true);
       setItemName(itemSelected?.item_name);
-      setItemTagsArr(itemSelected?.tag_id_array.split(","));
+      if(itemSelected?.tag_id_array?.length > 0) {
+        setItemTagsArr(itemSelected?.tag_id_array.split(","));
+      }
+      
       setItemNote(itemSelected?.notes);
     } else {
       setModalVisible(false);
