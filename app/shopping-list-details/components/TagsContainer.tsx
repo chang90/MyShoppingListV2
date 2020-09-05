@@ -29,6 +29,8 @@ const styles = StyleSheet.create({
   }
 });
 
+const limitNum = 3;
+
 export function TagsContainer({ itemTagsArr, tagLists, addNewTag }: Props) {
   const [displayTagList, setDisplayTagList] = useState([] as Tag[]);
   const [newTagName, setNewTagName] = useState('');
@@ -49,20 +51,24 @@ export function TagsContainer({ itemTagsArr, tagLists, addNewTag }: Props) {
 
   return (
     <View>
-      <Text>item tag (Limit to 3)</Text>
+      <Text>item tag (Limit to {limitNum})</Text>
       <View style={styles.tagGroup}>
-        <View style={styles.colorTag}>
-          <TextInput
-            style={styles.colorTagText}
-            onChangeText={text => setNewTagName(text)}
-            onFocus={() => setNewTagName('')}
-            value={newTagName}
-            placeholder="+"
-            placeholderTextColor={'#aaa'}
-            onSubmitEditing={()=>addTagToTagList()}
-          >
-          </TextInput>
-        </View>
+      <Text>{displayTagList.join(',')}</Text>
+       {displayTagList?.length < limitNum &&
+          (<View style={styles.colorTag}>
+            <TextInput
+              style={styles.colorTagText}
+              onChangeText={text => setNewTagName(text)}
+              onFocus={() => setNewTagName('')}
+              value={newTagName}
+              placeholder="+"
+              placeholderTextColor={'#aaa'}
+              onSubmitEditing={() => addTagToTagList()}
+            >
+            </TextInput>
+          </View>)
+        }
+
         {
           displayTagList.map((tag: Tag, index: number) => {
             return <View key={index} style={[styles.colorTag, { backgroundColor: tag.color as string }]}>
