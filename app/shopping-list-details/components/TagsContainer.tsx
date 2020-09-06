@@ -53,8 +53,7 @@ export function TagsContainer({ itemTagsArr, tagLists, addNewTag }: Props) {
     <View>
       <Text>item tag (Limit to {limitNum})</Text>
       <View style={styles.tagGroup}>
-      <Text>{displayTagList.join(',')}</Text>
-       {displayTagList?.length < limitNum &&
+       {itemTagsArr?.length < limitNum &&
           (<View style={styles.colorTag}>
             <TextInput
               style={styles.colorTagText}
