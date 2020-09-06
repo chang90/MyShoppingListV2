@@ -15,6 +15,7 @@ import { TagsContainer } from "./TagsContainer";
 type Props = {
   modifyItem: Function,
   unSelectItem: Function,
+  refreshItemSelected: Function,
   itemSelected?: Item | null
 };
 
@@ -126,7 +127,7 @@ const styles = StyleSheet.create<Styles>({
   }
 });
 
-export function AddItem({ itemSelected, modifyItem, unSelectItem }: Props) {
+export function AddItem({ itemSelected, modifyItem, unSelectItem, refreshItemSelected }: Props) {
   const [modalVisible, setModalVisible] = useState(false);
   const [itemName, setItemName] = useState('');
   const [itemNote, setItemNote] = useState('');
@@ -168,8 +169,7 @@ export function AddItem({ itemSelected, modifyItem, unSelectItem }: Props) {
       SqlDatabase.activeTag(tagId,(itemSelected as Item).id);
       const tagListData = await SqlDatabase.checkTagList();
       setTagLists((tagListData as any)._array);
-
-      setItemTagsArr([...itemTagsArr, tagId+'']);
+      refreshItemSelected();
     }
     
   }

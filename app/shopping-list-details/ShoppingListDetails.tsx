@@ -80,6 +80,13 @@ export function ShoppingListDetailsScreen({ route }: Props) {
 
   }
 
+  const refreshItemSelected = async() => {
+    const itemListData = await SqlDatabase.checkItemsList(shoppinglist_id);
+    setTable((itemListData as any)._array);
+    const newSelectedItem = (itemListData?._array as Array<Item>).find(item => item.id === itemSelected?.id);
+    setItemSelected(newSelectedItem || null);
+  }
+
   React.useEffect(() => {
     const runEffect = async () => {
       const itemListData = await SqlDatabase.checkItemsList(shoppinglist_id);
@@ -96,7 +103,7 @@ export function ShoppingListDetailsScreen({ route }: Props) {
           })
         }
       </ScrollView>
-      <AddItem modifyItem={handleModifyItem} itemSelected={itemSelected} unSelectItem={unSelectItem} />
+      <AddItem modifyItem={handleModifyItem} itemSelected={itemSelected} unSelectItem={unSelectItem} refreshItemSelected={refreshItemSelected}/>
     </View>
 
 
