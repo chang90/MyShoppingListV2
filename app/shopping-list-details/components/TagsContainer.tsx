@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Tag } from "./AddItem";
-import { StyleSheet, View, Text, TextInput } from "react-native";
+import { StyleSheet, View, Text, TextInput, TouchableHighlight } from "react-native";
 
 type Props = {
   itemTagsArr: Array<string>,
   tagLists: Tag[],
-  addNewTag: Function
+  addNewTag: Function,
+  toggleTag: Function
 };
 
 const styles = StyleSheet.create({
@@ -31,7 +32,7 @@ const styles = StyleSheet.create({
 
 const limitNum = 3;
 
-export function TagsContainer({ itemTagsArr, tagLists, addNewTag }: Props) {
+export function TagsContainer({ itemTagsArr, tagLists, addNewTag, toggleTag }: Props) {
   const [displayTagList, setDisplayTagList] = useState([] as Tag[]);
   const [newTagName, setNewTagName] = useState('');
   const addTagToTagList = () => {
@@ -70,8 +71,14 @@ export function TagsContainer({ itemTagsArr, tagLists, addNewTag }: Props) {
 
         {
           displayTagList.map((tag: Tag, index: number) => {
-            return <View key={index} style={[styles.colorTag, { backgroundColor: tag.color as string }]}>
-              <Text>{tag.tagName}</Text>
+            return <View key={index}>
+              <TouchableHighlight
+                style={[styles.colorTag, { backgroundColor: tag.color as string }]}
+                onPress={() => {
+                  toggleTag(tag.id);
+                }}>
+                <Text>{tag.tagName}</Text>
+              </TouchableHighlight>
             </View>
           })
         }

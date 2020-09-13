@@ -372,9 +372,44 @@ const SqlDatabase = {
         SqlDatabase.onError(error);
         reject(error);
       }
+    });
+  },
+  tagIsActive: (tagId:number, itemId:number): Promise<boolean> => {
+    return new Promise((resolve, reject) => {
+      const db = SqlDatabase.getConnection();
+      try {
+        db.transaction((tx) => {
+          tx.executeSql(
+            `SELECT item_id FROM item_tags WHERE item_id = ${itemId} AND tag_id = ${tagId}; `,
+            [],
+            (_, { rows }) => { resolve((rows as any)?._array?.length > 0) }
+          );
+        });
+      } catch (error) {
+        SqlDatabase.onError(error);
+        reject(error);
+      }
+    });
+  },
+  deactiveTag: (tagId:number, itemId:number): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      const db = SqlDatabase.getConnection();
+      try {
+        db.transaction((tx) => {
+          tx.executeSql(
+            `DELETE FROM item_tags WHERE item_id = ${itemId} AND tag_id = ${tagId}; `,
+            [],
+            (_, { rows }) => { resolve(rows) }
+          );
+        });
+      } catch (error) {
+        SqlDatabase.onError(error);
+        reject(error);
+      }
 
     });
   },
+
   dropTables: (tableName: string): Promise<any> => {
     return new Promise((resolve, reject) => {
       const db = SqlDatabase.getConnection();

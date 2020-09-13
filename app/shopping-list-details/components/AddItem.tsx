@@ -174,6 +174,20 @@ export function AddItem({ itemSelected, modifyItem, unSelectItem, refreshItemSel
     
   }
 
+  const toggleTag = async (tagId: number) => {
+    if(!itemSelected?.id) {
+      throw new Error("missing item id");
+    }
+    const tagIsActive = await SqlDatabase.tagIsActive(tagId, (itemSelected as Item).id);
+    if(tagIsActive) {
+      await SqlDatabase.deactiveTag(tagId, (itemSelected as Item).id);
+      console.log('toggleTag',tagIsActive)
+    } else {
+      await SqlDatabase.activeTag(tagId, (itemSelected as Item).id);
+    }
+    refreshItemSelected();
+  }
+
   React.useEffect(() => {
     const runEffect = async () => {
       const tagListData = await SqlDatabase.checkTagList();
@@ -232,7 +246,11 @@ export function AddItem({ itemSelected, modifyItem, unSelectItem, refreshItemSel
                 onChangeText={text => setItemName(text)}
                 value={itemName}
               />
-              <TagsContainer itemTagsArr={itemTagsArr} tagLists={tagLists} addNewTag={addNewTag}/>
+              <TagsContainer 
+                itemTagsArr={itemTagsArr} 
+                tagLists={tagLists} 
+                addNewTag={addNewTag}
+                toggleTag={toggleTag}/>
               <Text>notes</Text>
               <TextInput
                 style={styles.inputBox}

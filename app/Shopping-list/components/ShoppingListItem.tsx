@@ -12,10 +12,7 @@ type RootStackParamList = {
 
 type ProfileScreenRouteProp = RouteProp<RootStackParamList, 'Profile'>;
 
-type ProfileScreenNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'Profile'
->;
+type ProfileScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Profile'>;
 
 type Props = {
   route: ProfileScreenRouteProp;
