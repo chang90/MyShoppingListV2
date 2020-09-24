@@ -149,7 +149,9 @@ export function AddItem({ itemSelected, modifyItem, unSelectItem, refreshItemSel
     } else {
       modifyItem({...itemSelected, 'item_name': itemName, notes: itemNote});
     }
+  }
 
+  const closeModal = () => {
     setModalVisible(!modalVisible);
     setItemName('');
     setItemNote('');
@@ -235,7 +237,7 @@ export function AddItem({ itemSelected, modifyItem, unSelectItem, refreshItemSel
               <TouchableHighlight
                 style={styles.modalCloseBtn}
                 onPress={() => {
-                  setModalVisible(!modalVisible);
+                  closeModal();
                   unSelectItem();
                 }}
               >
@@ -265,7 +267,11 @@ export function AddItem({ itemSelected, modifyItem, unSelectItem, refreshItemSel
               />
               <TouchableHighlight
                 style={styles.submitButton}
-                onPress={addOrEditItem}>
+                onPress={()=>{
+                  addOrEditItem();
+                  closeModal();
+                  unSelectItem();
+                  }}>
                 <Text style={styles.submitButtonText}>{itemSelected ? 'Edit': 'Add'}</Text>
               </TouchableHighlight>
             </View>
