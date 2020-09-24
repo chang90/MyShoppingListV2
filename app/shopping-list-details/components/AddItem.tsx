@@ -188,6 +188,10 @@ export function AddItem({ itemSelected, modifyItem, unSelectItem, refreshItemSel
     refreshItemSelected();
   }
 
+  const cleanUpSelectedTag = () =>{
+    setItemTagsArr([]);
+  }
+
   React.useEffect(() => {
     const runEffect = async () => {
       const tagListData = await SqlDatabase.checkTagList();
@@ -273,6 +277,7 @@ export function AddItem({ itemSelected, modifyItem, unSelectItem, refreshItemSel
         style={styles.addButton}
         onPress={() => {
           setModalVisible(true);
+          cleanUpSelectedTag();
         }}
       >
         <Text style={styles.textStyle}>+</Text>
