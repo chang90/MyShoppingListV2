@@ -145,7 +145,7 @@ export function AddItem({ itemSelected, modifyItem, unSelectItem, refreshItemSel
         item_name: itemName,
         notes: itemNote
       }
-      modifyItem(newItemObj);
+      modifyItem(newItemObj, itemTagsArr);
     } else {
       modifyItem({...itemSelected, 'item_name': itemName, notes: itemNote});
     }
@@ -168,26 +168,42 @@ export function AddItem({ itemSelected, modifyItem, unSelectItem, refreshItemSel
     }
     const tagId:number = (existingTag as any)?.id;
     if(tagId) {
-      SqlDatabase.activeTag(tagId,(itemSelected as Item).id);
-      const tagListData = await SqlDatabase.checkTagList();
-      setTagLists((tagListData as any)._array);
-      refreshItemSelected();
+      if(!itemSelected?.id) {
+        // no id means this tag belongs to a new item
+        if (!itemTagsArr.find(tagIdItem => tagIdItem === tagId.toString())) {
+          setItemTagsArr([...itemTagsArr, tagId.toString()]);
+        } else {
+          setItemTagsArr(itemTagsArr.filter(tagIdItem => tagIdItem !== tagId.toString()));
+        }
+      } else {
+        SqlDatabase.activeTag(tagId,(itemSelected as Item).id);
+        const tagListData = await SqlDatabase.checkTagList();
+        setTagLists((tagListData as any)._array);
+        refreshItemSelected();
+      }
     }
     
   }
 
   const toggleTag = async (tagId: number) => {
     if(!itemSelected?.id) {
-      throw new Error("missing item id");
-    }
-    const tagIsActive = await SqlDatabase.tagIsActive(tagId, (itemSelected as Item).id);
-    if(tagIsActive) {
-      await SqlDatabase.deactiveTag(tagId, (itemSelected as Item).id);
-      console.log('toggleTag',tagIsActive)
+      // no id means this tag belongs to a new item
+      if(!itemTagsArr.find(tagIdItem => tagIdItem === tagId.toString())) {
+        setItemTagsArr([...itemTagsArr, tagId.toString()]);
+      } else {
+        setItemTagsArr(itemTagsArr.filter(tagIdItem => tagIdItem !== tagId.toString()));
+      }
     } else {
-      await SqlDatabase.activeTag(tagId, (itemSelected as Item).id);
+      const tagIsActive = await SqlDatabase.tagIsActive(tagId, (itemSelected as Item).id);
+      if(tagIsActive) {
+        await SqlDatabase.deactiveTag(tagId, (itemSelected as Item).id);
+        console.log('toggleTag',tagIsActive)
+      } else {
+        await SqlDatabase.activeTag(tagId, (itemSelected as Item).id);
+      }
+      refreshItemSelected();
     }
-    refreshItemSelected();
+
   }
 
   const cleanUpSelectedTag = () =>{

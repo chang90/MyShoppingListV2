@@ -60,14 +60,20 @@ export function ShoppingListDetailsScreen({ route }: Props) {
     setItemSelected(null);
   }
 
-  const handleModifyItem = async (itemObj: Item | CreateItemQuery) => {
+  const handleModifyItem = async (itemObj: Item | CreateItemQuery, itemTagsArr?: Array<string>) => {
 
     if (itemObj.id != null) {
       // If already select an item, modify this item in DB
       await SqlDatabase.updateItem(itemObj as Item);
     } else {
       //add new item into the list
-      await SqlDatabase.createNewItem(itemObj, shoppinglist_id);
+      const newItemId = await SqlDatabase.createNewItem(itemObj, shoppinglist_id);
+      // add all itemTags
+      if(newItemId && itemTagsArr) {
+        itemTagsArr.forEach(async (itemTag: string)=> {
+          await SqlDatabase.activeTag(Number(itemTag), newItemId)
+        })
+      }
     }
     setItemSelected(null);
     const itemListData = await SqlDatabase.checkItemsList(shoppinglist_id);
