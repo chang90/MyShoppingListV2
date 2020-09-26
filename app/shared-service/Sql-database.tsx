@@ -199,7 +199,8 @@ const SqlDatabase = {
           const currentDate = new Date().toUTCString();
           tx.executeSql(`insert into items (item_name, created_date, updated_date, notes, status, shoppinglist_id) values ('${itemObj.item_name}', '${currentDate}', '${currentDate}', '${itemObj.notes}', ${1}, ${shoppinglistId})`,
             [],
-            (_, { rows }) => { resolve(rows) }
+            (_, {insertId}) => { 
+              resolve(insertId) }
           );
         });
       } catch (error) {
