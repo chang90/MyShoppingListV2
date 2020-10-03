@@ -35,6 +35,8 @@ expo start
 ```
 4. Download and run expo app, use expo app to scan QR code to visit my app
 
+### Publish project
+When expo is started, you can publish it by clicking the publish botton in expo web page.
 
 ### Wireframe
 ![alt text](https://github.com/chang90/MyShoppingListV2/blob/master/wireframe/design1.png 'wireframe1')
