@@ -40,7 +40,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   mainContainer: {
-    // flex:1,
     width: 300,
     height: 310,
     backgroundColor: '#fff',
@@ -51,6 +50,13 @@ const styles = StyleSheet.create({
     fontSize: 15,
     textAlign: "center",
     padding: 10
+  },
+  label: {
+    paddingLeft: 6
+  },
+  textInput: {
+    height: 40,
+    paddingLeft: 6
   },
   smallContainer: {
     flex: 1,
@@ -158,26 +164,28 @@ export function LoginScreen({ route, navigation }: Props) {
         <View style={styles.line}></View>
         <View style={styles.smallContainer}>
           <Text>Username</Text>
-          <TextInput underlineColorAndroid="#009688" placeholder="Please input your user name" onChangeText={username => setUsername(username)} />
+          <TextInput
+            underlineColorAndroid="#009688"
+            style={styles.textInput}
+            placeholder="Please input your user name"
+            onChangeText={username => setUsername(username)} />
           <Text>Password</Text>
-          <TextInput underlineColorAndroid="#009688" placeholder="Please input your password" onChangeText={password => setPassword(password)} />
-          <View style={styles.rememberBox}>
-            <Text style={styles.autoLoginLabel}>Auto Login</Text>
-            <Switch
-              onValueChange={func}
-              style={{ marginBottom: 10, marginTop: 10 }}
-              value={autoLogin} />
-          </View>
+          <TextInput
+            underlineColorAndroid="#009688"
+            style={styles.textInput}
+            placeholder="Please input your password"
+            onChangeText={password => setPassword(password)} />
           <View style={styles.gap}></View>
           <Button color='#009688' onPress={closeWindow} title="Sign In" />
-          <Button color='#009688' onPress={deleteAll} title="Delete" />
+          
           <TouchableOpacity style={styles.signUp}>
-            <Text>Don't have an account?Sign Up Here!</Text>
+            <Text>Don't have an account? Sign Up Here!</Text>
           </TouchableOpacity>
           <Text style={styles.resetText}>Reset your password</Text>
           
         </View>
       </View>
+      {/* <Button color='#009688' onPress={deleteAll} title="Delete" /> */}
     </View>
   );
 }
