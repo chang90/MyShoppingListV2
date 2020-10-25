@@ -3,6 +3,7 @@ import React from 'react';
 import * as SQLite from 'expo-sqlite';
 import { ShoppingList, CreateShoppingListQuery } from '../Shopping-list/ShoppingList';
 import { CreateItemQuery, Item } from '../shopping-list-details/ShoppingListDetails';
+import { Base64 } from 'js-base64';
 
 
 var database_name = "ShoppingList.db";
@@ -45,6 +46,10 @@ const SqlDatabase = {
           const currentDate = new Date().toUTCString();
           tx.executeSql(`insert into users (user_name, created_date, updated_date, connect_to_cloud) values ('default', '${currentDate}','${currentDate}',0);`);
 
+          // Create testing user
+          const encodePassword = Base64.encode('123456');
+          tx.executeSql(`insert into users (user_name, created_date, updated_date, connect_to_cloud, password) values ('user1', '${currentDate}','${currentDate}',0,'${encodePassword}');`);
+          
           // Create default shopping list
           tx.executeSql(`insert into shopping_lists (shopping_list_name, created_date, updated_date, user_id) values ('${new Date().toISOString().slice(0, 10)} Shopping list', '${currentDate}','${currentDate}',1);`);
 
@@ -147,6 +152,31 @@ const SqlDatabase = {
           tx.executeSql(`DELETE FROM users;`,
             [],
             (_, { rows }) => { resolve(rows) }
+          );
+        });
+      } catch (error) {
+        SqlDatabase.onError(error);
+        reject(error);
+      }
+
+    });
+  },
+  userNameMatchPassword: (username: string, password: string): Promise<any> => {
+    const encodePassword = Base64.encode(password);
+    return new Promise((resolve, reject) => {
+      const db = SqlDatabase.getConnection();
+      try {
+        db.transaction((tx) => {
+          tx.executeSql(`Select id FROM users WHERE user_name = '${username}' AND password = '${encodePassword}' ORDER BY id ASC LIMIT 1;`,
+            [],
+            (_, { rows }) => { 
+              if(rows.length > 0) {
+                resolve(rows.item(0)) 
+              } else {
+                resolve(null);
+              }
+              
+            }
           );
         });
       } catch (error) {

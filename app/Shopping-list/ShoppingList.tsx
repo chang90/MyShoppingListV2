@@ -46,7 +46,7 @@ export function ShoppingListScreen({ route, navigation }: Props) {
       // If already select a shopping list, modify this item in DB
       await SqlDatabase.updateShoppingList(ShoppingListObj as ShoppingList);
     } else {
-      //add new shopping list into the list
+      // Add new shopping list into the list
       await SqlDatabase.createShoppingList(ShoppingListObj as CreateShoppingListQuery, userId)
     }
     setShoppingListSelected(null);

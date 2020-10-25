@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button, TouchableOpacity, TextInput, Image, Switch } from 'react-native';
+import { StyleSheet, Text, View, Button, TouchableOpacity, TextInput, Image, Alert } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import SqlDatabase from '../shared-service/Sql-database';
@@ -122,8 +122,16 @@ export function LoginScreen({ route, navigation }: Props) {
   const closeWindow = () => {
     navigation.navigate("ShoppingList", { userId: 1 })
   };
+  const login = async () => {
+    const userId = (await SqlDatabase.userNameMatchPassword(username,password) as any).id;
+    if(userId) {
+      navigation.navigate("ShoppingList", { userId: userId });
+    } else {
+      Alert.alert("Username password not match, please try again.");
+    }
+  }
+
   const deleteAll = async () => {
-    console.log('delete')
     try {
       await SqlDatabase.deleteAllShoppingLists();
       await SqlDatabase.deleteAllUsers();
@@ -139,8 +147,8 @@ export function LoginScreen({ route, navigation }: Props) {
     } catch (error) {
       console.log(error);
     }
-    
   }
+
   React.useEffect(() => {
     SqlDatabase.initData();
   }, []);
@@ -176,7 +184,7 @@ export function LoginScreen({ route, navigation }: Props) {
             placeholder="Please input your password"
             onChangeText={password => setPassword(password)} />
           <View style={styles.gap}></View>
-          <Button color='#009688' onPress={closeWindow} title="Sign In" />
+          <Button color='#009688' onPress={login} title="Sign In" />
           
           <TouchableOpacity style={styles.signUp}>
             <Text>Don't have an account? Sign Up Here!</Text>
@@ -185,7 +193,7 @@ export function LoginScreen({ route, navigation }: Props) {
           
         </View>
       </View>
-      {/* <Button color='#009688' onPress={deleteAll} title="Delete" /> */}
+      <Button color='#009688' onPress={deleteAll} title="Delete" />
     </View>
   );
 }
