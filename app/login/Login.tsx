@@ -123,7 +123,7 @@ export function LoginScreen({ route, navigation }: Props) {
     navigation.navigate("ShoppingList", { userId: 1 })
   };
   const login = async () => {
-    const userId = await SqlDatabase.userNameMatchPassword(username,password);
+    const userId = (await SqlDatabase.userNameMatchPassword(username,password) as any).id;
     if(userId) {
       navigation.navigate("ShoppingList", { userId: userId });
     } else {

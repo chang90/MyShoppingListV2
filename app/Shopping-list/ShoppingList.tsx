@@ -46,7 +46,7 @@ export function ShoppingListScreen({ route, navigation }: Props) {
       // If already select a shopping list, modify this item in DB
       await SqlDatabase.updateShoppingList(ShoppingListObj as ShoppingList);
     } else {
-      //add new shopping list into the list
+      // Add new shopping list into the list
       await SqlDatabase.createShoppingList(ShoppingListObj as CreateShoppingListQuery, userId)
     }
     setShoppingListSelected(null);
@@ -60,7 +60,9 @@ export function ShoppingListScreen({ route, navigation }: Props) {
 
   React.useEffect(() => {
     const runEffect = async () => {
+      console.log('call',userId)
       const shoppingListData = await SqlDatabase.checkShoppingLists(userId) as any;
+      console.log(shoppingListData)
       setTable((shoppingListData as any)._array);
     };
     runEffect();
