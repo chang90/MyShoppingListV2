@@ -161,6 +161,25 @@ const SqlDatabase = {
 
     });
   },
+  createNewUser: (username: string, password: string): Promise<any> => {
+    const encodePassword = Base64.encode(password);
+    return new Promise((resolve, reject) => {
+      const db = SqlDatabase.getConnection();
+      try {
+        db.transaction((tx) => {
+          const currentDate = new Date().toUTCString();
+          tx.executeSql(`insert into users (user_name, created_date, updated_date, connect_to_cloud, password) values ('${username}', '${currentDate}','${currentDate}',0,'${encodePassword}');`,
+            [],
+            (_, {insertId}) => { 
+              resolve(insertId) }
+          );
+        });
+      } catch (error) {
+        SqlDatabase.onError(error);
+        reject(error);
+      }
+    });
+  },
   userNameMatchPassword: (username: string, password: string): Promise<any> => {
     const encodePassword = Base64.encode(password);
     return new Promise((resolve, reject) => {

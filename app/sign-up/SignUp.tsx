@@ -7,7 +7,7 @@ import SqlDatabase from '../shared-service/Sql-database';
 
 type RootStackParamList = {
   Home: object;
-  SignUp: Object;
+  Login: object;
   Profile: { userId: string };
   Feed: { sort: 'latest' | 'top' } | undefined;
   ShoppingList: object;
@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   },
   mainContainer: {
     width: 300,
-    height: 310,
+    height: 260,
     backgroundColor: '#fff',
     borderRadius: 20,
   },
@@ -85,15 +85,6 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     fontSize: 15
   },
-  rememberBox: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  autoLoginLabel: {
-    color: '#ccc',
-    marginRight: 5
-  },
   button: {
     width: 20,
     height: 20,
@@ -104,52 +95,18 @@ const styles = StyleSheet.create({
   nav: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  signUp: {
-    marginTop: 20,
-    alignItems: 'center'
-  },
-  SignUpText: {
-    textAlign: "center"
   }
 });
 
-export function LoginScreen({ route, navigation }: Props) {
+export function SignUpScreen({ route, navigation }: Props) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [autoLogin, setAutoLogin] = useState(true);
-
-  const closeWindow = () => {
-    navigation.navigate("ShoppingList", { userId: 1 })
+  const backToLogin = () => {
+    navigation.navigate("Login", {})
   };
-  const directToSignUp = () => {
-    navigation.navigate("SignUp",{});
-  }
-  const login = async () => {
-    const userId = (await SqlDatabase.userNameMatchPassword(username,password) as any).id;
-    if(userId) {
-      navigation.navigate("ShoppingList", { userId: userId });
-    } else {
-      Alert.alert("Username password not match, please try again.");
-    }
-  }
-
-  const deleteAll = async () => {
-    try {
-      await SqlDatabase.deleteAllShoppingLists();
-      await SqlDatabase.deleteAllUsers();
-      await SqlDatabase.deleteAllItems();
-      await SqlDatabase.deleteAllItemsTags();
-      await SqlDatabase.deleteAllTags();
-
-      await SqlDatabase.dropTables('item_tags');
-      await SqlDatabase.dropTables('tags');
-      await SqlDatabase.dropTables('items');
-      await SqlDatabase.dropTables('shopping_lists');
-      await SqlDatabase.dropTables('users');
-    } catch (error) {
-      console.log(error);
-    }
+  const signUp = async () => {
+    const newUserId = await SqlDatabase.createNewUser(username, password);
+    navigation.navigate("ShoppingList", { userId: newUserId })
   }
 
   React.useEffect(() => {
@@ -164,8 +121,8 @@ export function LoginScreen({ route, navigation }: Props) {
       <View style={styles.mainContainer}>
         <View style={styles.nav}>
           <View style={styles.button} />
-          <Text style={styles.titleText}>Sign In</Text>
-          <TouchableOpacity onPress={closeWindow}>
+          <Text style={styles.titleText}>Sign Up</Text>
+          <TouchableOpacity onPress={backToLogin}>
             <Image
               style={styles.button}
               source={require('../../resources/close.png')}
@@ -187,16 +144,9 @@ export function LoginScreen({ route, navigation }: Props) {
             placeholder="Please input your password"
             onChangeText={password => setPassword(password)} />
           <View style={styles.gap}></View>
-          <Button color='#009688' onPress={login} title="Sign In" />
-          
-          <TouchableOpacity style={styles.signUp} onPress={directToSignUp}>
-            <Text>Don't have an account? Sign Up Here!</Text>
-          </TouchableOpacity>
-          <Text style={styles.resetText}>Reset your password</Text>
-          
+          <Button color='#009688' onPress={signUp} title="Sign Up" /> 
         </View>
       </View>
-      <Button color='#009688' onPress={deleteAll} title="Delete" />
     </View>
   );
 }
