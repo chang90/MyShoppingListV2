@@ -105,7 +105,8 @@ export function SignUpScreen({ route, navigation }: Props) {
     navigation.navigate("Login", {})
   };
   const signUp = async () => {
-    console.log('signUp');
+    const newUserId = await SqlDatabase.createNewUser(username, password);
+    navigation.navigate("ShoppingList", { userId: newUserId })
   }
 
   React.useEffect(() => {
