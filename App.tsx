@@ -6,6 +6,7 @@ import { createStackNavigator, StackNavigationProp } from '@react-navigation/sta
 import { LoginScreen } from './app/login/Login';
 import { ShoppingListScreen } from './app/Shopping-list/ShoppingList';
 import { ShoppingListDetailsScreen } from './app/shopping-list-details/ShoppingListDetails';
+import { SignUpScreen } from './app/sign-up/SignUp';
 
 
 function Profile() {
@@ -26,6 +27,11 @@ export default function App() {
           name="Login"
           component={LoginScreen}
           options={{title: 'Login'}}
+        />
+        <Stack.Screen
+          name="SignUp"
+          component={SignUpScreen}
+          options={{title: 'Sign Up'}}
         />
         <Stack.Screen
           name="ShoppingList"
