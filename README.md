@@ -9,7 +9,7 @@ The [original project](https://github.com/hiby90hou/MyShoppingList) was no longe
 
 ## 1. Getting Started for user
 
-MVP is not ready.
+[Download APK](https://github.com/chang90/MyShoppingListV2/blob/master/MyShoppingList-v2.0.0.apk)
 
 ## 2. Getting Started for developer
 
@@ -36,7 +36,11 @@ expo start
 4. Download and run expo app, use expo app to scan QR code to visit my app
 
 ### Publish project
-When expo is started, you can publish it by clicking the publish botton in expo web page.
+Publish android APK by run following commend
+```
+expo build:android -t apk
+```
+Then download APK file from expo website
 
 ### Wireframe
 ![alt text](https://github.com/chang90/MyShoppingListV2/blob/master/wireframe/design1.png 'wireframe1')
