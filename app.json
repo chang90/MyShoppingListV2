@@ -2,7 +2,7 @@
   "name": "MyShoppingList",
   "displayName": "MyShoppingList",
   "expo": {
-    "name": "MyShoppingList",
+    "name": "My Shopping List",
     "slug": "MyShoppingList",
     "version": "1.0.0",
     "platforms": [
@@ -12,6 +12,11 @@
     ],
     "assetBundlePatterns": [
       "**/*"
-    ]
+    ],
+    "description": "",
+    "githubUrl": "https://github.com/chang90/MyShoppingListV2",
+    "android": {
+      "package": "com.hiby90.MyShoppingList"
+    }
   }
 }
