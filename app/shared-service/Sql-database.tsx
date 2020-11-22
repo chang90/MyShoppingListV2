@@ -265,7 +265,7 @@ const SqlDatabase = {
       try {
         db.transaction((tx) => {
           const currentDate = new Date().toUTCString();
-          tx.executeSql(`UPDATE items SET item_name = '${itemObj.item_name}', updated_date = '${currentDate}', notes = '${itemObj.notes}' WHERE id = '${itemObj.id}';`,
+          tx.executeSql(`UPDATE items SET item_name = '${itemObj.item_name}', status = '${itemObj.status}', updated_date = '${currentDate}', notes = '${itemObj.notes}' WHERE id = '${itemObj.id}';`,
             [],
             (_, { rows }) => { resolve(rows) }
           );

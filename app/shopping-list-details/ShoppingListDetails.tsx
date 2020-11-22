@@ -61,7 +61,6 @@ export function ShoppingListDetailsScreen({ route }: Props) {
   }
 
   const handleModifyItem = async (itemObj: Item | CreateItemQuery, itemTagsArr?: Array<string>) => {
-
     if (itemObj.id != null) {
       // If already select an item, modify this item in DB
       await SqlDatabase.updateItem(itemObj as Item);

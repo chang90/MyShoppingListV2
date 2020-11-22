@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, CheckBox, Button, Alert, ToastAndroid } from 'react-native';
+import { ITEM_STATUS } from '../../enums/item-status.enum';
 import { Item } from '../ShoppingListDetails';
 
 type Props = {
@@ -48,29 +49,29 @@ const styles = StyleSheet.create({
 })
 
 const findStatusColor = (expireDate: Date | null): Color | null => {
-  if(!expireDate){
+  if (!expireDate) {
     return null;
   }
-  let num = Math.floor ((Number(expireDate) - Date.now()) / ( 24 * 3600 * 1000 ))+1
-  if(num<3 && num>=0){
+  let num = Math.floor((Number(expireDate) - Date.now()) / (24 * 3600 * 1000)) + 1
+  if (num < 3 && num >= 0) {
     return {
-      veryfresh:false,
-      nearexpire:true,
-      isexpired:false
+      veryfresh: false,
+      nearexpire: true,
+      isexpired: false
     }
   }
-  else if(num<0){
+  else if (num < 0) {
     return {
-      veryfresh:false,
-      nearexpire:false,
-      isexpired:true
+      veryfresh: false,
+      nearexpire: false,
+      isexpired: true
     }
   }
-  else{
+  else {
     return {
-      veryfresh:true,
-      nearexpire:false,
-      isexpired:false
+      veryfresh: true,
+      nearexpire: false,
+      isexpired: false
     }
   }
 }
@@ -79,21 +80,47 @@ const deleteTodoWithConfirm = (todo: any, callback: Function) => {
   Alert.alert(
     'Are you sure to delete ' + todo.item_name + '?',
     'This operation cannot be undone',
-    [		    
-      {text: 'Yes', onPress: () => callback(todo.id)},
-      {text: 'No', onPress: () =>{} },
+    [
+      { text: 'Yes', onPress: () => callback(todo.id) },
+      { text: 'No', onPress: () => { } },
     ],
     { cancelable: true }
-  )  
+  )
 }
 
 const handleChange = (todo: any, callback: Function) => {
-  todo.isDone = !todo.isDone
-  
-  if(todo.isDone && todo.easyToexpired) {
-    ToastAndroid.showWithGravity('please enter item expire date', ToastAndroid.SHORT, ToastAndroid.TOP);
+
+  // Unfinished feature
+  if (todo?.status === ITEM_STATUS.Require && (todo?.tag_id_array.charAt(0)) === '1') {
+    Alert.alert(
+      "This item has tag `easy to expired`",
+      "please enter item expire date",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        {
+          text: "OK", onPress: () => {
+            todo.status = ITEM_STATUS.Brought;
+            callback(todo);
+          }
+        }
+      ],
+      { cancelable: false }
+    );
+  } else {
+    if (todo.status === ITEM_STATUS.Require) {
+      todo.status = ITEM_STATUS.Brought;
+    } else {
+      todo.status = ITEM_STATUS.Require;
+    }
+    callback(todo);
   }
-  callback(todo);
+
+
+  
 };
 
 export function ToDoItem({ todo, deleteTodo, modifyItem, editItem }: Props) {
@@ -103,21 +130,21 @@ export function ToDoItem({ todo, deleteTodo, modifyItem, editItem }: Props) {
     veryfresh: false,
     nearexpire: false,
     isexpired: false
-  } 
+  }
   color = findStatusColor(expiry_date) || color;
   const isDone: boolean = todo.status > 1;
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <CheckBox value={isDone} onValueChange={()=>{handleChange(todo, modifyItem)}} />
-        <TouchableOpacity onPress={()=>{editItem(todo)}}>
+        <CheckBox value={isDone} onValueChange={() => { handleChange(todo, modifyItem) }} />
+        <TouchableOpacity onPress={() => { editItem(todo) }}>
           <Text>{item_name}</Text>
         </TouchableOpacity>
       </View>
       <Text style={[styles.expire_date, color.veryfresh && styles.gray_color, color.nearexpire && styles.red_color, color.isexpired && styles.dark_gray_color]}>
         {(expiry_date != null) ? ("Expire date:\n" + expiry_date.getFullYear() + "/" + (expiry_date.getMonth() + 1) + "/" + expiry_date.getDate()) : ""}
       </Text>
-      <TouchableOpacity style={styles.content} onPress={()=>{deleteTodoWithConfirm(todo, deleteTodo)}}>
+      <TouchableOpacity style={styles.content} onPress={() => { deleteTodoWithConfirm(todo, deleteTodo) }}>
         <Text>delete</Text>
       </TouchableOpacity>
     </View>
