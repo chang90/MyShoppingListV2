@@ -1,5 +1,8 @@
 import React from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, CheckBox, Button, Alert, ToastAndroid } from 'react-native';
+import { useState } from 'react';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { StyleSheet, View, Text, TouchableOpacity, Button, Alert, ToastAndroid } from 'react-native';
+import CheckBox from '@react-native-community/checkbox';
 import { ITEM_STATUS } from '../../enums/item-status.enum';
 import { Item } from '../ShoppingListDetails';
 
@@ -88,51 +91,68 @@ const deleteTodoWithConfirm = (todo: any, callback: Function) => {
   )
 }
 
-const handleChange = (todo: any, callback: Function) => {
 
-  // Unfinished feature
-  if (todo?.status === ITEM_STATUS.Require && (todo?.tag_id_array.charAt(0)) === '1') {
-    Alert.alert(
-      "This item has tag `easy to expired`",
-      "please enter item expire date",
-      [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel"
-        },
-        {
-          text: "OK", onPress: () => {
-            todo.status = ITEM_STATUS.Brought;
-            callback(todo);
-          }
-        }
-      ],
-      { cancelable: false }
-    );
-  } else {
-    if (todo.status === ITEM_STATUS.Require) {
-      todo.status = ITEM_STATUS.Brought;
-    } else {
-      todo.status = ITEM_STATUS.Require;
-    }
-    callback(todo);
-  }
-
-
-  
-};
 
 export function ToDoItem({ todo, deleteTodo, modifyItem, editItem }: Props) {
   const { item_name, notes, status } = todo;
-  const expiry_date: Date | null = todo.expiry_date ? new Date(todo.expiry_date) : null;
   let color: Color = {
     veryfresh: false,
     nearexpire: false,
     isexpired: false
   }
-  color = findStatusColor(expiry_date) || color;
   const isDone: boolean = todo.status > 1;
+  const [date, setDate] = useState(todo.expiry_date ? new Date(todo.expiry_date): null);
+  color = findStatusColor(date) || color;
+  const [show, setShow] = useState(false);
+
+  const onChange = (event: any, selectedDate?: Date | undefined) => {
+    setShow(false);
+    todo.status = ITEM_STATUS.Brought;
+    todo.expiry_date = selectedDate?.toString() || new Date().toString()
+    if(selectedDate) {
+      setDate(selectedDate)
+    }
+    console.log(todo)
+    modifyItem(todo);
+  };
+
+  const handleChange = (todo: any, callback: Function) => {
+
+    // Unfinished feature
+    if (todo?.status === ITEM_STATUS.Require && (todo?.tag_id_array.charAt(0)) === '1') {
+      Alert.alert(
+        "This item has tag `easy to expired`",
+        "please enter item expire date",
+        [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel"
+          },
+          {
+            text: "OK", onPress: () => {
+              setShow(true);
+              if(todo.expiry_date) {
+                setDate(new Date(todo.expiry_date));
+              } else {
+                setDate(new Date())
+              }
+              
+            }
+          }
+        ],
+        { cancelable: false }
+      );
+    } else {
+      if (todo.status === ITEM_STATUS.Require) {
+        todo.status = ITEM_STATUS.Brought;
+      } else {
+        todo.status = ITEM_STATUS.Require;
+      }
+      callback(todo);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.content}>
@@ -142,11 +162,21 @@ export function ToDoItem({ todo, deleteTodo, modifyItem, editItem }: Props) {
         </TouchableOpacity>
       </View>
       <Text style={[styles.expire_date, color.veryfresh && styles.gray_color, color.nearexpire && styles.red_color, color.isexpired && styles.dark_gray_color]}>
-        {(expiry_date != null) ? ("Expire date:\n" + expiry_date.getFullYear() + "/" + (expiry_date.getMonth() + 1) + "/" + expiry_date.getDate()) : ""}
+        {(date != null) ? ("Expire date:\n" + date.getFullYear() + "/" + (date.getMonth() + 1) + "/" + date.getDate()) : ""}
       </Text>
       <TouchableOpacity style={styles.content} onPress={() => { deleteTodoWithConfirm(todo, deleteTodo) }}>
         <Text>delete</Text>
       </TouchableOpacity>
+      {show && (
+        <DateTimePicker
+          testID="dateTimePicker"
+          value={date ? date: new Date()}
+          mode='date'
+          is24Hour={true}
+          display="default"
+          onChange={onChange}
+        />
+      )}
     </View>
   );
 }
